@@ -58,6 +58,7 @@ public class ProductController extends HttpServlet {
             }
         }
 
+
         //get supplier id from url if it exists
         String supplierIdString = req.getParameter("supplier_id");
         if (supplierIdString != null){
@@ -76,12 +77,7 @@ public class ProductController extends HttpServlet {
             }
         }
 
-        // // Alternative setting of the template context
-        // Map<String, Object> params = new HashMap<>();
-        // params.put("category", productCategoryDataStore.find(1));
-        // params.put("products", productDataStore.getBy(productCategoryDataStore.find(1)));
-        // context.setVariables(params);
-
+        context.setVariable("categories", productCategoryDataStore.getAll());
         engine.process("product/index.html", context, resp.getWriter());
     }
 
