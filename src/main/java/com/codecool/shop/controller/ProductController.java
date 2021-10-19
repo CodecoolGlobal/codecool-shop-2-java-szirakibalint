@@ -78,6 +78,7 @@ public class ProductController extends HttpServlet {
         }
 
         context.setVariable("categories", productCategoryDataStore.getAll());
+        context.setVariable("suppliers", supplierDao.getAll());
         engine.process("product/index.html", context, resp.getWriter());
     }
 
