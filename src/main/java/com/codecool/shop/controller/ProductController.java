@@ -32,23 +32,28 @@ public class ProductController extends HttpServlet {
         TemplateEngine engine = TemplateEngineUtil.getTemplateEngine(req.getServletContext());
         WebContext context = new WebContext(req, resp, req.getServletContext());
 
+        context.setVariable("category", productService.getProductCategory(1));
+        context.setVariable("products", productService.getProductsForCategory(1));
+
+
+        //get category id from url if it exists
         String categoryIdString = req.getParameter("category_id");
-        int categoryId = 1;
-        try {
-            categoryId = Integer.parseInt(categoryIdString);
-        } catch (NumberFormatException e){
-            System.out.println("category id wrong format. showing data for category_id=1");
-        }
+        if (categoryIdString != null){
+            int categoryId = 1;
+            try {
+                categoryId = Integer.parseInt(categoryIdString);
+            } catch (NumberFormatException e) {
+                resp.sendRedirect("/");
+            }
 
-        ProductCategory category = productService.getProductCategory(categoryId);
+            ProductCategory category = productService.getProductCategory(categoryId);
 
-        if (category != null) {
-            context.setVariable("category", category);
-            context.setVariable("products", productService.getProductsForCategory(categoryId));
-        } else {
-            System.out.println("category with id " + categoryId + " does not exist. showing category_id=1");
-            context.setVariable("category", productService.getProductCategory(1));
-            context.setVariable("products", productService.getProductsForCategory(1));
+            if (category != null) {
+                context.setVariable("category", category);
+                context.setVariable("products", productService.getProductsForCategory(categoryId));
+            } else {
+                resp.sendRedirect("/");
+            }
         }
 
         // // Alternative setting of the template context
