@@ -32,6 +32,10 @@ public class Cart {
         return userId;
     }
 
+    public int getId() {
+        return id;
+    }
+
     public void add(Product product) {
         Integer productNum = products.get(product);
         productNum = (productNum == null) ? 1 : productNum + 1;
