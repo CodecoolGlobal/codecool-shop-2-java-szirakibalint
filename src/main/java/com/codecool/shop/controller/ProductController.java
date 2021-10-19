@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @WebServlet(urlPatterns = {"/"})
 public class ProductController extends HttpServlet {
@@ -30,10 +31,16 @@ public class ProductController extends HttpServlet {
         TemplateEngine engine = TemplateEngineUtil.getTemplateEngine(req.getServletContext());
         WebContext context = new WebContext(req, resp, req.getServletContext());
 
-        int categoryId = Integer.parseInt(req.getParameter("category_id"));
+        String categoryId = req.getParameter("category_id");
+        int category = 1;
+        try {
+            category = Integer.parseInt(categoryId);
+        } catch (NumberFormatException e){
+            System.out.println("category id wrong format. showing data for category_id=1");
+        }
 
-        context.setVariable("category", productService.getProductCategory(categoryId));
-        context.setVariable("products", productService.getProductsForCategory(categoryId));
+        context.setVariable("category", productService.getProductCategory(category));
+        context.setVariable("products", productService.getProductsForCategory(category));
 
         // // Alternative setting of the template context
         // Map<String, Object> params = new HashMap<>();
