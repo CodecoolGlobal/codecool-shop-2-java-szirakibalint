@@ -1,17 +1,16 @@
 package com.codecool.shop.dao.implementation;
 
 import com.codecool.shop.dao.CartDao;
-import com.codecool.shop.dao.ProductDao;
 import com.codecool.shop.model.Cart;
+import com.codecool.shop.model.Product;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class CartDaoMem implements CartDao {
 
-    private List<Cart> data = new ArrayList<>();
+    private final List<Cart> data = new ArrayList<>();
     private static CartDaoMem instance = null;
-    private ProductDao productList = ProductDaoMem.getInstance();
 
     /* A private Constructor prevents any other class from instantiating.
      */
@@ -42,26 +41,26 @@ public class CartDaoMem implements CartDao {
     }
 
     @Override
-    public void addToCart(int cartId, int productId) {
+    public void addToCart(int cartId, Product product) {
         Cart cart = getCartById(cartId);
         if (cart != null) {
-            cart.add(productList.find(productId));
+            cart.add(product);
         }
     }
 
     @Override
-    public void removeOneFromCart(int cartId, int productId) {
+    public void removeOneFromCart(int cartId, Product product) {
         Cart cart = getCartById(cartId);
         if (cart != null) {
-            cart.decrease(productList.find(productId));
+            cart.decrease(product);
         }
     }
 
     @Override
-    public void removeProductFromCart(int cartId, int productId) {
+    public void removeProductFromCart(int cartId, Product product) {
         Cart cart = getCartById(cartId);
         if (cart != null) {
-            cart.remove(productList.find(productId));
+            cart.remove(product);
         }
     }
 
