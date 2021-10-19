@@ -1,2 +1,2 @@
-package com.codecool.shop.dao.implementation;public class CartDaoMem {
+package com.codecool.shop.dao;public class CartDaoMem {
 }

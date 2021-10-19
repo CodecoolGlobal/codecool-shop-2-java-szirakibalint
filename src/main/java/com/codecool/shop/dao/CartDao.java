@@ -1,9 +1,11 @@
 package com.codecool.shop.dao;
 
-public interface CartDao {
+import com.codecool.shop.model.Cart;
 
-    void createNewCart();
-    void getCartByUserId(int userId);
+public interface CartDao {
+    void createNewCart(int userId);
+    Cart getCartByUserId(int userId);
+    Cart getCartById(int cartId);
     void addToCart(int cartId, int productId);
     void removeOneFromCart(int cartId, int productId);
     void removeProductFromCart(int cartId, int productId);
