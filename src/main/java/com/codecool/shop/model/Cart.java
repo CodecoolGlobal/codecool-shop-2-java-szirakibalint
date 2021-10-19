@@ -48,7 +48,7 @@ public class Cart {
         }
     }
 
-    public void remove(Product product) {
+    public void decrease(Product product) {
         int productNum = products.get(product);
         if (productNum != 0) {
             productNum--;
@@ -58,6 +58,10 @@ public class Cart {
             }
         }
 
+    }
+
+    public void remove(Product product) {
+        products.remove(product);
     }
 
     public void removeAll() {
