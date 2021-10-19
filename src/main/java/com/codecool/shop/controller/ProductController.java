@@ -4,6 +4,7 @@ import com.codecool.shop.dao.ProductCategoryDao;
 import com.codecool.shop.dao.ProductDao;
 import com.codecool.shop.dao.implementation.ProductCategoryDaoMem;
 import com.codecool.shop.dao.implementation.ProductDaoMem;
+import com.codecool.shop.model.ProductCategory;
 import com.codecool.shop.service.ProductService;
 import com.codecool.shop.config.TemplateEngineUtil;
 import org.thymeleaf.TemplateEngine;
@@ -31,16 +32,24 @@ public class ProductController extends HttpServlet {
         TemplateEngine engine = TemplateEngineUtil.getTemplateEngine(req.getServletContext());
         WebContext context = new WebContext(req, resp, req.getServletContext());
 
-        String categoryId = req.getParameter("category_id");
-        int category = 1;
+        String categoryIdString = req.getParameter("category_id");
+        int categoryId = 1;
         try {
-            category = Integer.parseInt(categoryId);
+            categoryId = Integer.parseInt(categoryIdString);
         } catch (NumberFormatException e){
             System.out.println("category id wrong format. showing data for category_id=1");
         }
 
-        context.setVariable("category", productService.getProductCategory(category));
-        context.setVariable("products", productService.getProductsForCategory(category));
+        ProductCategory category = productService.getProductCategory(categoryId);
+
+        if (category != null) {
+            context.setVariable("category", category);
+            context.setVariable("products", productService.getProductsForCategory(categoryId));
+        } else {
+            System.out.println("category with id " + categoryId + " does not exist. showing category_id=1");
+            context.setVariable("category", productService.getProductCategory(1));
+            context.setVariable("products", productService.getProductsForCategory(1));
+        }
 
         // // Alternative setting of the template context
         // Map<String, Object> params = new HashMap<>();
