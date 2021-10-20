@@ -1,15 +1,69 @@
 function setCartEvent() {
     let cartButton = document.getElementById("open-modal");
     cartButton.addEventListener("click", async () => {
-        let modalContent = document.getElementById("modal-body");
-        const url = "/cart";
-        let cartContent = await apiGet(url);
-
-        //Needs to be implemented when we know what comes.
-
-        modalContent.innerHTML = "My cart Content";
+        await buildModal();
     })
 }
+
+async function buildModal() {
+    let modalContent = document.getElementById("modal-body");
+    modalContent.innerHTML = "";
+    const url = "/cart";
+    let cartContent = await apiGet(url);
+
+    let divContent = document.createElement("div");
+    divContent.className = "cart-content";
+
+    for (let product of cartContent) {
+        let productDiv = document.createElement("div");
+        productDiv.className = "product-cart";
+
+        let productName = document.createElement("p");
+        productName.innerText = product.name;
+
+        let decreaseProduct = document.createElement("a");
+        decreaseProduct.href = "#";
+        decreaseProduct.dataset.id = product.id;
+        decreaseProduct.innerText = "-"
+        decreaseProduct.className = "decrease-cart";
+
+        let productQuantity = document.createElement("p");
+        productQuantity.innerText = product.quantity;
+        productQuantity.className = "quantity";
+
+        let increaseProduct = document.createElement("a");
+        increaseProduct.href = "#";
+        increaseProduct.dataset.id = product.id;
+        increaseProduct.className = "increase-cart";
+        increaseProduct.innerText = "+";
+
+        let productPrice = document.createElement("p");
+        productPrice.innerText = product.price;
+
+        productDiv.appendChild(productName);
+        productDiv.appendChild(decreaseProduct);
+        productDiv.appendChild(productQuantity);
+        productDiv.appendChild(increaseProduct);
+        productDiv.appendChild(productPrice);
+
+        modalContent.appendChild(productDiv);
+    }
+    setProductIncreaserEvent()
+
+}
+
+function setProductIncreaserEvent() {
+    let decreaserButtons = document.getElementsByClassName("increase-cart");
+    for (let button of decreaserButtons) {
+        button.addEventListener("click", async () => {
+            const url = "/cart";
+            const id = button.dataset.id;
+            await apiPost(url, {"product_id" : id})
+            await buildModal();
+        })
+    }
+}
+
 
 function setButtonEvents() {
     let buttons = document.getElementsByClassName("btn-success");
@@ -45,7 +99,6 @@ async function apiGet(url) {
         return data
     }
 }
-
 
 function init() {
     setButtonEvents();
