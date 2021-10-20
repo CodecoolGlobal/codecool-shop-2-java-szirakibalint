@@ -48,8 +48,8 @@ async function buildModal() {
 
         modalContent.appendChild(productDiv);
     }
-    setProductIncreaserEvent()
-
+    setProductIncreaserEvent();
+    setProductDecreaserEvent();
 }
 
 function setProductIncreaserEvent() {
@@ -64,6 +64,16 @@ function setProductIncreaserEvent() {
     }
 }
 
+function setProductDecreaserEvent() {
+    let decreaserButtons = document.getElementsByClassName("decrease-cart");
+    for (let button of decreaserButtons) {
+        button.addEventListener("click", async () => {
+            const url = "cart?product-id=" + button.dataset.id + "&type=single";
+            await apiDelete(url);
+            await buildModal();
+        })
+    }
+}
 
 function setButtonEvents() {
     let buttons = document.getElementsByClassName("btn-success");
@@ -98,6 +108,17 @@ async function apiGet(url) {
         let data = response.json()
         return data
     }
+}
+
+async function apiDelete(url, payload="") {
+    await fetch(url, {
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        method: 'DELETE',
+        body: JSON.stringify(payload)
+    })
 }
 
 function init() {
