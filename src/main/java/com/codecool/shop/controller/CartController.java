@@ -45,7 +45,7 @@ public class CartController extends HttpServlet {
             jb.append(line);
         try {
             JSONObject payload = new JSONObject(jb.toString());
-            cartService.addToCart(String.valueOf(payload.get("product-id")), String.valueOf(payload.get("user-id")));
+            cartService.addToCart(String.valueOf(payload.get("product_id")), null);
         } catch (JSONException e) {
             System.out.println("Error parsing JSON request string");
         }

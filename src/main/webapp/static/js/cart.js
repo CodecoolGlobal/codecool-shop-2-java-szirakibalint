@@ -19,7 +19,7 @@ function setButtonEvents() {
             const card = button.parentElement.parentElement.parentElement;
             const id = card.id;
             const url = "/cart";
-            await apiPost(url, {id : id});
+            await apiPost(url, {"product_id" : id});
             const cardName = card.getElementsByClassName("card-title")[0].innerHTML;
             alert(cardName + " Added to cart successfully!");
         })
