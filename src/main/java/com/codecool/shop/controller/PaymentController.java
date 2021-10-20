@@ -42,7 +42,7 @@ public class PaymentController extends HttpServlet {
         CartDao cartDao = CartDaoMem.getInstance();
         CartService cartService = new CartService(cartDao, productDao);
 
-        List<JSONObject> itemsInCart = cartService.getCartContent(cartId);
+        List<JSONObject> itemsInCart = cartService.handleGet(cartId, null);
 
         TemplateEngine engine = TemplateEngineUtil.getTemplateEngine(req.getServletContext());
         WebContext context = new WebContext(req, resp, req.getServletContext());
