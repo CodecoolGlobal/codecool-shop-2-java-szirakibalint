@@ -32,7 +32,8 @@ public class CartController extends HttpServlet {
 
         PrintWriter out = resp.getWriter();
         String userId = req.getParameter("user-id");
-        List<JSONObject> cartJson = cartService.getCartContent(userId);
+        String productId = req.getParameter("product-id");
+        List<JSONObject> cartJson = cartService.handleGet(userId, productId);
         out.println(cartJson);
     }
 

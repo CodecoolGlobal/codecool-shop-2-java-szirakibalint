@@ -110,6 +110,10 @@ async function apiGet(url) {
     }
 }
 
+function setCheckoutButtonEvent(){
+    const button = document.getElementById("go-to-checkout")
+    button.addEventListener('click', ()=>window.location='/checkout')
+}
 async function apiDelete(url, payload="") {
     await fetch(url, {
         headers: {
@@ -123,6 +127,7 @@ async function apiDelete(url, payload="") {
 
 function init() {
     setButtonEvents();
+    setCheckoutButtonEvent();
     setCartEvent();
 }
 
