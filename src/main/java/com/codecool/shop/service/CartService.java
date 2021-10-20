@@ -72,7 +72,7 @@ public class CartService {
                 try {
                     put("id", product.getId());
                     put("name", product.getName());
-                    put("price", product.getPrice());
+                    put("price", product.getDefaultPrice());
                     put("category", product.getProductCategory().getName());
                     put("supplier", product.getSupplier().getName());
                     put("quantity", products.get(product));
