@@ -13,6 +13,29 @@ function getPayPalForm() {
             </form>`
 }
 
+function getCreditCardFrom() {
+    return `<label for="payment-form">Enter Credit Card details:</label>
+             <form id="payment-form">
+              <div class="form-group">
+                <label for="card-number">Card number:</label>
+                <input type="text" class="form-control" id="card-number" placeholder="card number">
+              </div>
+              <div class="form-group">
+                <label for="card-holder">Card holder:</label>
+                <input type="text" class="form-control" id="card-holder" placeholder="card holder">
+              </div>
+              <div class="form-group">
+                <label for="expiration">Expiration:</label>
+                <input type="text" class="form-control" id="expiration" placeholder="expiration">
+              </div>
+              <div class="form-group">
+                <label for="cvv">CVV:</label>
+                <input type="text" minlength="3" maxlength="3" class="form-control" id="cvv" placeholder="CVV">
+              </div>
+              <button type="submit" class="btn btn-primary">Pay with Credit Card</button>
+            </form>`
+}
+
 function initPaymentSelector() {
     const paymentSelector = document.querySelector("#payment-selector");
     paymentSelector.addEventListener("submit", e => {
@@ -22,6 +45,8 @@ function initPaymentSelector() {
             const paymentDiv = document.querySelector("#payment");
             if (paymentMethod === "paypal") {
                 paymentDiv.innerHTML = getPayPalForm();
+            } else {
+                paymentDiv.innerHTML = getCreditCardFrom();
             }
         }
     })
