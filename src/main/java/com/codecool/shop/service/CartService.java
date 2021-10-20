@@ -38,14 +38,25 @@ public class CartService {
         }
     }
 
-    public List<JSONObject> getCartContent(String userId) {
+    public List<JSONObject> handleGet(String userId, String productId) {
         Cart cart = (userId != null)
                 ? cartDao.getCartByUserId(Integer.parseInt(userId))
                 : cartDao.getCartById(DEFAULT_CART_ID);
-        if (cart != null) {
-            return createJsonFromCart(cart);
+        if (productId == null) {
+            if (cart != null) {
+                return createJsonFromCart(cart);
+            } else {
+                return new ArrayList<>();
+            }
+        } else {
+            Product product = productDao.find(Integer.parseInt(productId));
+            int quantity = cartDao.getProductQuantity(cart.getId(), product);
+            JSONObject quantityJson = new JSONObject(quantity);
+            List<JSONObject> listJson = new ArrayList<>(){{
+                add(quantityJson);
+            }};
+            return listJson;
         }
-        return new ArrayList<>();
     }
 
     public void handleDelete(String userId, String productId, String deleteType) {

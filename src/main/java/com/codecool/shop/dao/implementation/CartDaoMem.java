@@ -6,6 +6,7 @@ import com.codecool.shop.model.Product;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class CartDaoMem implements CartDao {
 
@@ -38,6 +39,13 @@ public class CartDaoMem implements CartDao {
     @Override
     public Cart getCartById(int cartId) {
         return data.stream().filter(cart -> cart.getId() == cartId).findFirst().orElse(null);
+    }
+
+    @Override
+    public int getProductQuantity(int cartId, Product product) {
+        Cart cart = data.get(cartId);
+        Integer quantity = cart.getProducts().get(product);
+        return Objects.requireNonNullElse(quantity, 0);
     }
 
     @Override
