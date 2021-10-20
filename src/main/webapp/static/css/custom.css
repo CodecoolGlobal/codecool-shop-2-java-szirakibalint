@@ -60,3 +60,12 @@
 {
     margin: 0 0 11px;
 }
+
+
+#checkout-form {
+    display:flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    width:60%;
+}
+
