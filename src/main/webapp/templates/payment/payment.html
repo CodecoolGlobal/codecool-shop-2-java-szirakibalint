@@ -36,6 +36,18 @@
 
 <div class="payment-page-container">
     <p th:text="'Total price: ' + ${totalPrice}">Total price here</p>
+    <div id="payment">
+        <label for="payment-selector">Choose a payment method:</label>
+        <form action="" id="payment-selector">
+            <p>
+                <input type="radio" name="payment-method" value="paypal" id="paypal"/>
+                <label for="paypal">PayPal</label> <br>
+                <input type="radio" name="payment-method" value="credit" id="credit"/>
+                <label for="credit">Credit card</label> <br>
+            </p>
+            <button class="btn btn-primary" type="submit">Enter details</button>
+        </form>
+    </div>
 </div>
 
 <div th:replace="footer.html :: copy"></div>
