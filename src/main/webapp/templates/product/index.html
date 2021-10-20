@@ -36,7 +36,30 @@
 
 <div class="container">
     <div class="card">
-        <strong th:text="${category.name}">Category Title</strong>
+        <form action="/" class="filter-form" id="category-selector">
+            <label> Category:
+                <select name="category_id" required>
+                    <option th:each="cat : ${categories}"
+                            th:text="${cat.name}"
+                            th:value="${cat.id}">
+                        category name here
+                    </option>
+                </select>
+            </label>
+            <button class="btn btn-primary" type="submit">Filter by category</button>
+        </form>
+        <form action="/" class="filter-form" id="supplier-selector">
+            <label> Supplier:
+                <select name="supplier_id" required>
+                    <option th:each="sup : ${suppliers}"
+                            th:text="${sup.name}"
+                            th:value="${sup.id}">
+                        supplier name here
+                    </option>
+                </select>
+            </label>
+            <button class="btn btn-primary" type="submit">Filter by supplier</button>
+        </form>
     </div>
 
     <div id="products" class="row">
