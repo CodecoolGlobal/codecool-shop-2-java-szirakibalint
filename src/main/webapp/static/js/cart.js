@@ -46,9 +46,14 @@ async function apiGet(url) {
     }
 }
 
+function setCheckoutButtonEvent(){
+    const button = document.getElementById("go-to-checkout")
+    button.addEventListener('click', ()=>window.location='/checkout')
+}
 
 function init() {
     setButtonEvents();
+    setCheckoutButtonEvent();
     setCartEvent();
 }
 
