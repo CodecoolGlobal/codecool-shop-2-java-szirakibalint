@@ -4,6 +4,7 @@ import com.codecool.shop.dao.CartDao;
 import com.codecool.shop.model.Cart;
 import com.codecool.shop.model.Product;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -78,5 +79,14 @@ public class CartDaoMem implements CartDao {
         if (cart != null) {
             cart.removeAll();
         }
+    }
+
+    @Override
+    public BigDecimal getTotalSum(int cartId) {
+        Cart cart = getCartById(cartId);
+        if (cart != null) {
+            return cart.getTotalSum();
+        }
+        return BigDecimal.ZERO;
     }
 }

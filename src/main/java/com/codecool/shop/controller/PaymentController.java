@@ -13,6 +13,7 @@ import com.codecool.shop.model.Product;
 import com.codecool.shop.model.ProductCategory;
 import com.codecool.shop.model.Supplier;
 import com.codecool.shop.service.CartService;
+import com.codecool.shop.service.PaymentService;
 import com.codecool.shop.service.ProductService;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -36,26 +37,13 @@ public class PaymentController extends HttpServlet {
 
         String cartId = req.getParameter("cart_id");
 
-        cartId = cartId == null ? "0" : cartId;
-
-        ProductDao productDao = ProductDaoMem.getInstance();
-        CartDao cartDao = CartDaoMem.getInstance();
-        CartService cartService = new CartService(cartDao, productDao);
-
-        List<JSONObject> itemsInCart = cartService.handleGet(cartId, null);
-
         TemplateEngine engine = TemplateEngineUtil.getTemplateEngine(req.getServletContext());
         WebContext context = new WebContext(req, resp, req.getServletContext());
 
-        BigDecimal totalPrice = new BigDecimal(0);
+        CartDao cartDao = CartDaoMem.getInstance();
+        PaymentService paymentService = new PaymentService(cartDao);
 
-        for (JSONObject item: itemsInCart) {
-            try {
-                totalPrice = totalPrice.add(BigDecimal.valueOf(item.getDouble("price")));
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
+        BigDecimal totalPrice = paymentService.getFullPriceForPayment(cartId);
 
         context.setVariable("totalPrice", totalPrice);
 
