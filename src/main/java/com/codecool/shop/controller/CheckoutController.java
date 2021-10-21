@@ -52,15 +52,12 @@ public class CheckoutController extends HttpServlet {
         }
 
         if (validateFormData(params)) {
-
-
             int orderId = orderService.addNewOrder(0,0,
                     params.get("lastname"),
                     params.get("firstname"),
                     params.get("country"),
                     params.get("city"),
                     params.get("address"));
-            orderService.printALlOrders();
             resp.sendRedirect(String.format("/payment?order_id=%s", orderId));
         }
     }
@@ -69,7 +66,7 @@ public class CheckoutController extends HttpServlet {
         for (String value : params.values()){
             if (value.equals("")) {
                 return false;
-            };
+            }
         }
         return true;
     }
