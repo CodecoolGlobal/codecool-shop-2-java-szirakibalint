@@ -32,6 +32,46 @@ public class Order {
 
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public LocalDateTime getOrderedAt() {
+        return orderedAt;
+    }
+
+    public boolean isPaidFor() {
+        return paidFor;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public Map<Product, Integer> getProducts() {
+        return products;
+    }
+
     public void pay(){
         if (!paidFor) {
             this.paidFor = true;
