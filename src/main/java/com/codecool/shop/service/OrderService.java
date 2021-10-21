@@ -37,11 +37,12 @@ public class OrderService {
     }
 
     public void payForOrder(String order_id) {
-        Order order = order_id == null
+        Order order = (order_id == null)
                 ? orderDao.find(0)
                 : orderDao.find(Integer.parseInt(order_id));
         if (order != null) {
             order.pay();
         }
+        System.out.println(order);
     }
 }
