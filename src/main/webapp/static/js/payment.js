@@ -1,13 +1,13 @@
 function getPayPalForm() {
-    return `<label for="payment-form">Enter PayPal details:</label>
+    return `<label for="payment-form">Enter PayPal account details:</label>
              <form id="payment-form">
               <div class="form-group">
-                <label for="email">Email address</label>
-                <input type="email" class="form-control" id="email" aria-describedby="emailHelp" placeholder="Enter email">
+                <label for="email">Email:</label>
+                <input type="email" class="form-control" id="paypal-email" placeholder="email">
               </div>
               <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" class="form-control" id="password" placeholder="Password">
+                <label for="password">Password:</label>
+                <input type="password" class="form-control" id="paypal-password" placeholder="password">
               </div>
               <button type="submit" class="btn btn-primary">Pay with PayPal</button>
             </form>`
