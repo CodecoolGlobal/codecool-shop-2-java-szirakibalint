@@ -15,6 +15,7 @@ public class Order {
     private LocalDateTime orderedAt;
     private boolean paidFor = false;
     private final int userId;
+    private final Cart cart;
     private Map<Product, Integer> products;
 
     public Order(String firstName, String lastName, String country, String city, String address, int userId, Cart cart){
@@ -27,9 +28,14 @@ public class Order {
         idCounter++;
 
         this.userId = userId;
+        this.cart = cart;
         products = cart.getProducts();
         this.orderedAt = LocalDateTime.now();
 
+    }
+
+    public Cart getCart() {
+        return cart;
     }
 
     public int getId() {
