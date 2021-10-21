@@ -35,4 +35,14 @@ public class OrderService {
         orderDao.add(order);
         return order.getId();
     }
+
+    public void payForOrder(String order_id) {
+        Order order = (order_id == null)
+                ? orderDao.find(0)
+                : orderDao.find(Integer.parseInt(order_id));
+        if (order != null) {
+            order.pay();
+        }
+        System.out.println(order);
+    }
 }
