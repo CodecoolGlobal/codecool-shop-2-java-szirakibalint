@@ -1,7 +1,10 @@
 package com.codecool.shop.logger;
 
+import com.codecool.shop.dao.CartDao;
 import com.codecool.shop.dao.OrderDao;
+import com.codecool.shop.dao.ProductDao;
 import com.codecool.shop.model.Order;
+import com.codecool.shop.service.CartService;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -12,24 +15,41 @@ import java.io.IOException;
 public class LoggerService {
 
     private final OrderDao orderDao;
+    private final CartDao cartDao;
+    private final CartService cartService;
 
-    public LoggerService(OrderDao orderDao) {
+    public LoggerService(OrderDao orderDao, CartDao cartDao, ProductDao productDao) {
         this.orderDao = orderDao;
+        this.cartDao = cartDao;
+        this.cartService = new CartService(cartDao, productDao);
     }
 
-    public void logOrder(int orderId) {
+    public void logValidOrder(int orderId) {
         Order order = orderDao.find(orderId);
         JSONObject jsonObject = new JSONObject(){{
             try {
-                put("order", order);
+                put("name", order.getFirstName() + " " + order.getLastName());
+                put("full_address", new JSONObject(){{
+                    put("country", order.getCountry());
+                    put("city", order.getCity());
+                    put("address", order.getAddress());
+                }});
+                put("cart", cartService.createJsonFromCart(order.getCart()));
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }};
-        String filename = String.valueOf(order.getId()) + String.valueOf(order.getOrderedAt());
+        String year = String.valueOf(order.getOrderedAt().getYear());
+        String month = String.valueOf(order.getOrderedAt().getMonth());
+        String day = String.valueOf(order.getOrderedAt().getDayOfMonth());
+        String filename = order.getId() + "-" + year + "-" + month + "-" + day + ".json";
         try {
-            FileWriter file = new FileWriter("idk.json");
-            file.write(jsonObject.toString());
+            File file = new File(filename);
+            file.createNewFile();
+            FileWriter fileWriter = new FileWriter(filename);
+            String text = jsonObject.toString();
+            fileWriter.write(text);
+            fileWriter.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
