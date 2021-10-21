@@ -26,8 +26,20 @@ public class LoggerService {
 
     public void logValidOrder(int orderId) {
         Order order = orderDao.find(orderId);
-        JSONObject jsonObject = new JSONObject(){{
+        JSONObject orderJson = createJSONFromValidOrder(order);
+        String filename = createFileName(order);
+        try {
+            createFile(filename);
+            writeFile(filename, orderJson);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private JSONObject createJSONFromValidOrder(Order order) {
+        return new JSONObject(){{
             try {
+                put("status", "paid");
                 put("name", order.getFirstName() + " " + order.getLastName());
                 put("full_address", new JSONObject(){{
                     put("country", order.getCountry());
@@ -39,19 +51,24 @@ public class LoggerService {
                 e.printStackTrace();
             }
         }};
+    }
+
+    private String createFileName(Order order) {
         String year = String.valueOf(order.getOrderedAt().getYear());
         String month = String.valueOf(order.getOrderedAt().getMonth());
         String day = String.valueOf(order.getOrderedAt().getDayOfMonth());
-        String filename = order.getId() + "-" + year + "-" + month + "-" + day + ".json";
-        try {
-            File file = new File(filename);
-            file.createNewFile();
-            FileWriter fileWriter = new FileWriter(filename);
-            String text = jsonObject.toString();
-            fileWriter.write(text);
-            fileWriter.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        return order.getId() + "-" + year + "-" + month + "-" + day + ".json";
+    }
+
+    private void createFile(String filename) throws IOException {
+        File file = new File(filename);
+        file.createNewFile();
+    }
+
+    private void writeFile(String filename, JSONObject orderJson) throws IOException {
+        FileWriter fileWriter = new FileWriter(filename);
+        String text = orderJson.toString();
+        fileWriter.write(text);
+        fileWriter.close();
     }
 }
