@@ -35,11 +35,18 @@ function getOrderId() {
     return paymentDiv.getAttribute("data-order-id");
 }
 
-function initPaymentFormSubmitEvent() {
+function getTotalPrice() {
+    const totalPrice = document.querySelector("#total-price");
+    const price = totalPrice.getAttribute("data-total-price");
+    return price + " USD";
+}
+
+function initPaymentFormSubmitEvent(paymentMethod) {
     const form = document.querySelector("#payment-form");
     form.addEventListener("submit", async e => {
         e.preventDefault();
         await fetch(`/payment?order_id=${getOrderId()}`, {method: 'POST'});
+        alert(`${getTotalPrice()} paid successfully with ${paymentMethod}`);
     })
 }
 
@@ -55,7 +62,7 @@ function initPaymentSelector() {
             } else {
                 paymentDiv.innerHTML = getCreditCardFrom();
             }
-            initPaymentFormSubmitEvent();
+            initPaymentFormSubmitEvent(paymentMethod);
         }
     })
 }
