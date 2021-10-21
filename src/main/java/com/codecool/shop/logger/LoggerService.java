@@ -15,12 +15,10 @@ import java.io.IOException;
 public class LoggerService {
 
     private final OrderDao orderDao;
-    private final CartDao cartDao;
     private final CartService cartService;
 
     public LoggerService(OrderDao orderDao, CartDao cartDao, ProductDao productDao) {
         this.orderDao = orderDao;
-        this.cartDao = cartDao;
         this.cartService = new CartService(cartDao, productDao);
     }
 
