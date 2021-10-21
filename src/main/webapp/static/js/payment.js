@@ -30,6 +30,19 @@ function getCreditCardFrom() {
             </form>`
 }
 
+function getOrderId() {
+    const paymentDiv = document.querySelector("#payment");
+    return paymentDiv.getAttribute("data-order-id");
+}
+
+function initPaymentFormSubmitEvent() {
+    const form = document.querySelector("#payment-form");
+    form.addEventListener("submit", async e => {
+        e.preventDefault();
+        await fetch(`/payment?order_id=${getOrderId()}`, {method: 'POST'});
+    })
+}
+
 function initPaymentSelector() {
     const paymentSelector = document.querySelector("#payment-selector");
     paymentSelector.addEventListener("submit", e => {
@@ -42,6 +55,7 @@ function initPaymentSelector() {
             } else {
                 paymentDiv.innerHTML = getCreditCardFrom();
             }
+            initPaymentFormSubmitEvent();
         }
     })
 }
