@@ -33,4 +33,13 @@ public class OrderService {
     public void addNewOrder(int userId, int cartId, String lastName, String firstName, String country, String city, String address) {
         orderDao.add(new Order(firstName, lastName, country, city, address, userId, cartDao.getCartById(cartId)));
     }
+
+    public void payForOrder(String order_id) {
+        Order order = order_id == null
+                ? orderDao.find(0)
+                : orderDao.find(Integer.parseInt(order_id));
+        if (order != null) {
+            order.pay();
+        }
+    }
 }
