@@ -5,6 +5,7 @@ import com.codecool.shop.dao.CartDao;
 import com.codecool.shop.dao.OrderDao;
 import com.codecool.shop.dao.implementation.CartDaoMem;
 import com.codecool.shop.dao.implementation.OrderDaoMem;
+import com.codecool.shop.model.Order;
 import com.codecool.shop.service.OrderService;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
@@ -41,8 +42,10 @@ public class CheckoutController extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 
         Enumeration<String> parameterNames = req.getParameterNames();
-        Map<String, String> params = new HashMap<>() ;
+        Map<String, String> params = new HashMap<>();
         OrderDao orderDao = OrderDaoMem.getInstance();
+        CartDao cartDao = CartDaoMem.getInstance();
+        OrderService orderService = new OrderService(cartDao, orderDao);
 
         while (parameterNames.hasMoreElements()) {
             String paramName = parameterNames.nextElement();
@@ -50,28 +53,9 @@ public class CheckoutController extends HttpServlet {
 
             params.put(paramName, paramValue);
         }
-
-        if (validateFormData(params)) {
-
-
-            orderService.addNewOrder(0,0,
-                    params.get("lastname"),
-                    params.get("firstname"),
-                    params.get("country"),
-                    params.get("city"),
-                    params.get("address"));
-            orderService.printALlOrders();
+        if (orderService.checkoutOrder(params)) {
             resp.sendRedirect("/payment");
         }
-    }
-
-    private boolean validateFormData(Map<String, String> params){
-        for (String value : params.values()){
-            if (value.equals("")) {
-                return false;
-            };
-        }
-        return true;
     }
 
 }
