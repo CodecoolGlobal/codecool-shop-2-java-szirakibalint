@@ -77,8 +77,9 @@ public class Cart {
         BigDecimal totalSum = BigDecimal.ZERO;
         for (Map.Entry<Product, Integer> productIntegerEntry : products.entrySet()) {
             Product product = productIntegerEntry.getKey();
-            String valueString = String.valueOf(productIntegerEntry);
-            totalSum = totalSum.add(product.getDefaultPrice().multiply(new BigDecimal(valueString)));
+            String valueString = String.valueOf(productIntegerEntry.getValue());
+            BigDecimal multipliedValue = product.getDefaultPrice().multiply(new BigDecimal(valueString));
+            totalSum = totalSum.add(multipliedValue);
         }
         return totalSum;
     }
