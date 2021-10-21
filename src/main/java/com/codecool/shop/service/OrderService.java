@@ -47,7 +47,6 @@ public class OrderService {
         if (order != null) {
             order.pay();
         }
-        System.out.println(order);
     }
 
     public boolean checkoutOrder(Map<String, String> params) {
