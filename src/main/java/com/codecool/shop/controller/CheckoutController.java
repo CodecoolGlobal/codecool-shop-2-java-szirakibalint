@@ -57,5 +57,4 @@ public class CheckoutController extends HttpServlet {
             resp.sendRedirect("/payment");
         }
     }
-
 }

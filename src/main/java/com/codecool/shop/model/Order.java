@@ -90,5 +90,7 @@ public class Order {
     }
 
 
-
+    public int getId() {
+        return id;
+    }
 }

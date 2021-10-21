@@ -1,39 +1,54 @@
 function getPayPalForm() {
-    return `<label for="payment-form">Enter PayPal details:</label>
+    return `<label for="payment-form">Enter PayPal account details:</label>
              <form id="payment-form">
               <div class="form-group">
-                <label for="email">Email address</label>
-                <input type="email" class="form-control" id="email" aria-describedby="emailHelp" placeholder="Enter email">
+                <label for="email">Email:</label>
+                <input required minlength="6" type="email" class="form-control" id="paypal-email" placeholder="email">
               </div>
               <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" class="form-control" id="password" placeholder="Password">
+                <label for="password">Password:</label>
+                <input required minlength="6" type="password" class="form-control" id="paypal-password" placeholder="password">
               </div>
               <button type="submit" class="btn btn-primary">Pay with PayPal</button>
             </form>`
 }
 
 function getCreditCardFrom() {
-    return `<label for="payment-form">Enter Credit Card details:</label>
-             <form id="payment-form">
-              <div class="form-group">
-                <label for="card-number">Card number:</label>
-                <input type="text" class="form-control" id="card-number" placeholder="card number">
+    return `<form id="payment-form">
+              <label for="card-details">Enter Credit Card details:</label>
+              <div class="form-group" id="card-details">
+                <input required minlength="13" maxlength="19" type="text" class="form-control" id="card-number" placeholder="1234 1234 1234 1234">
+                <input required min="1" max="12" type="number" class="form-control" id="expiration-month" placeholder="MM">
+                <input required min="1" max="99" type="number" class="form-control" id="expiration-year" placeholder="YY">
+                <input required min="0" max="999" type="number" class="form-control" id="cvv" placeholder="123">
               </div>
               <div class="form-group">
-                <label for="card-holder">Card holder:</label>
-                <input type="text" class="form-control" id="card-holder" placeholder="card holder">
-              </div>
-              <div class="form-group">
-                <label for="expiration">Expiration:</label>
-                <input type="text" class="form-control" id="expiration" placeholder="expiration">
-              </div>
-              <div class="form-group">
-                <label for="cvv">CVV:</label>
-                <input type="text" minlength="3" maxlength="3" class="form-control" id="cvv" placeholder="CVV">
+                <label for="card-holder">Name on card:</label>
+                <input required minlength="5" type="text" class="form-control" id="card-owner" placeholder="name on card">
               </div>
               <button type="submit" class="btn btn-primary">Pay with Credit Card</button>
             </form>`
+}
+
+function getOrderId() {
+    const paymentDiv = document.querySelector("#payment");
+    return paymentDiv.getAttribute("data-order-id");
+}
+
+function getTotalPrice() {
+    const totalPrice = document.querySelector("#total-price");
+    const price = totalPrice.getAttribute("data-total-price");
+    return price + " USD";
+}
+
+function initPaymentFormSubmitEvent(paymentMethod) {
+    const form = document.querySelector("#payment-form");
+    form.addEventListener("submit", async e => {
+        e.preventDefault();
+        await fetch(`/payment?order_id=${getOrderId()}`, {method: 'POST'});
+        alert(`${getTotalPrice()} paid successfully with ${paymentMethod}`);
+        window.location.replace("/");
+    })
 }
 
 function initPaymentSelector() {
@@ -48,6 +63,7 @@ function initPaymentSelector() {
             } else {
                 paymentDiv.innerHTML = getCreditCardFrom();
             }
+            initPaymentFormSubmitEvent(paymentMethod);
         }
     })
 }
