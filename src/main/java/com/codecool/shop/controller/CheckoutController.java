@@ -5,8 +5,6 @@ import com.codecool.shop.dao.CartDao;
 import com.codecool.shop.dao.OrderDao;
 import com.codecool.shop.dao.implementation.CartDaoMem;
 import com.codecool.shop.dao.implementation.OrderDaoMem;
-import com.codecool.shop.model.Cart;
-import com.codecool.shop.model.Order;
 import com.codecool.shop.service.OrderService;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
@@ -54,7 +52,14 @@ public class CheckoutController extends HttpServlet {
         }
 
         if (validateFormData(params)) {
-            orderDao.add(new Order(1, new Cart()));
+
+
+            orderService.addNewOrder(0,0,
+                    params.get("lastname"),
+                    params.get("firstname"),
+                    params.get("country"),
+                    params.get("city"),
+                    params.get("address"));
             orderService.printALlOrders();
             resp.sendRedirect("/payment");
         }

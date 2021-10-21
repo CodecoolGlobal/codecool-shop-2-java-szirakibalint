@@ -3,6 +3,7 @@ package com.codecool.shop.service;
 import com.codecool.shop.dao.CartDao;
 import com.codecool.shop.dao.OrderDao;
 import com.codecool.shop.model.Cart;
+import com.codecool.shop.model.Order;
 
 import java.math.BigDecimal;
 
@@ -26,6 +27,10 @@ public class OrderService {
     }
 
     public void printALlOrders(){
-        System.out.println(orderDao.getAll());
+        orderDao.getAll().forEach(System.out::println);
+    }
+
+    public void addNewOrder(int userId, int cartId, String lastName, String firstName, String country, String city, String address) {
+        orderDao.add(new Order(firstName, lastName, country, city, address, userId, cartDao.getCartById(cartId)));
     }
 }

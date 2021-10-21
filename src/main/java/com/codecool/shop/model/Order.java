@@ -1,15 +1,19 @@
 package com.codecool.shop.model;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.Map;
 
 public class Order {
     private static int idCounter = 0;
 
     private final int id;
+    private final String firstName;
+    private final String lastName;
+    private final String country;
+    private final String city;
+    private final String address;
     private LocalDateTime orderedAt;
-    private boolean paidFor;
+    private boolean paidFor = false;
     private final int userId;
     private Map<Product, Integer> products;
 
@@ -34,6 +38,15 @@ public class Order {
         } else {
             throw new RuntimeException("already paid for this!!");
         }
+    }
+
+    @Override
+    public String toString() {
+        return orderedAt +
+                " " + firstName +
+                " " + lastName +
+                " " + address +
+                " " + products.toString();
     }
 
 
