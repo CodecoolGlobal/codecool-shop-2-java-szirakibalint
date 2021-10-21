@@ -14,7 +14,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.List;
 
 import org.json.JSONObject;
 
@@ -31,9 +30,9 @@ public class CartController extends HttpServlet {
         resp.setCharacterEncoding("UTF-8");
 
         PrintWriter out = resp.getWriter();
-        String userId = req.getParameter("user-id");
+        String cartId = req.getParameter("cart-id");
         String productId = req.getParameter("product-id");
-        JSONObject cartJson = cartService.handleGet(userId, productId);
+        JSONObject cartJson = cartService.handleGet(cartId, productId);
         out.println(cartJson);
     }
 
@@ -46,7 +45,7 @@ public class CartController extends HttpServlet {
             jb.append(line);
         try {
             JSONObject payload = new JSONObject(jb.toString());
-            cartService.addToCart(String.valueOf(payload.get("product_id")), null);
+            cartService.handlePost(String.valueOf(payload.get("product_id")), String.valueOf(payload.get("cart_id")));
         } catch (JSONException e) {
             System.out.println("Error parsing JSON request string");
         }
@@ -55,8 +54,8 @@ public class CartController extends HttpServlet {
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) {
         String productId = req.getParameter("product-id");
-        String userId = req.getParameter("user-id");
+        String cartId = req.getParameter("cart-id");
         String deleteType = req.getParameter("type");
-        cartService.handleDelete(userId, productId, deleteType);
+        cartService.handleDelete(cartId, productId, deleteType);
     }
 }
