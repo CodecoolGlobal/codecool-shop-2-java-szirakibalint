@@ -1,5 +1,6 @@
 package com.codecool.shop.model;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 public class Cart {
@@ -70,5 +71,15 @@ public class Cart {
 
     public void removeAll() {
         products = new HashMap<>();
+    }
+
+    public BigDecimal getTotalSum() {
+        BigDecimal totalSum = BigDecimal.ZERO;
+        for (Map.Entry<Product, Integer> productIntegerEntry : products.entrySet()) {
+            Product product = productIntegerEntry.getKey();
+            String valueString = String.valueOf(productIntegerEntry);
+            totalSum = totalSum.add(product.getDefaultPrice().multiply(new BigDecimal(valueString)));
+        }
+        return totalSum;
     }
 }

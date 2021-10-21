@@ -51,11 +51,16 @@ public class CartService {
         } else {
             Product product = productDao.find(Integer.parseInt(productId));
             int quantity = cartDao.getProductQuantity(cart.getId(), product);
-            JSONObject quantityJson = new JSONObject(quantity);
-            List<JSONObject> listJson = new ArrayList<>(){{
+            JSONObject quantityJson = new JSONObject(){{
+                try {
+                    put("quantity", quantity);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }};
+            return new ArrayList<>(){{
                 add(quantityJson);
             }};
-            return listJson;
         }
     }
 
