@@ -30,6 +30,7 @@ public class PaymentController extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         String cartId = req.getParameter("cart_id");
+        String orderId = req.getParameter("order_id");
 
         TemplateEngine engine = TemplateEngineUtil.getTemplateEngine(req.getServletContext());
         WebContext context = new WebContext(req, resp, req.getServletContext());
@@ -41,6 +42,7 @@ public class PaymentController extends HttpServlet {
         BigDecimal totalPrice = paymentService.getFullPriceForPayment(cartId);
 
         context.setVariable("totalPrice", totalPrice);
+        context.setVariable("order_id", orderId == null ? "0" : orderId);
 
         engine.process("payment/payment.html", context, resp.getWriter());
     }
