@@ -24,6 +24,7 @@ async function buildModal() {
         let decreaseProduct = document.createElement("a");
         decreaseProduct.href = "#";
         decreaseProduct.dataset.id = product.id;
+        decreaseProduct.id = product.id;
         decreaseProduct.innerText = "-"
         decreaseProduct.className = "decrease-cart";
 
@@ -35,6 +36,7 @@ async function buildModal() {
         let increaseProduct = document.createElement("a");
         increaseProduct.href = "#";
         increaseProduct.dataset.id = product.id;
+        increaseProduct.id = product.id;
         increaseProduct.className = "increase-cart";
         increaseProduct.innerText = "+";
 
@@ -81,6 +83,9 @@ async function quantityChange(id) {
     let data = await apiGet(url);
     let count = data[0].quantity;
     document.getElementById("quantity-" + id).innerText = count;
+    if (count == 0) {
+        buildModal();
+    }
 }
 
 function setButtonEvents() {
