@@ -44,7 +44,7 @@ public class CartService {
                 : cartDao.getCartById(DEFAULT_CART_ID);
         if (productId == null) {
             if (cart != null) {
-                return createJsonFromCart(cart);
+                return cart.createJsonFromCart();
             } else {
                 return new JSONObject();
             }
@@ -60,19 +60,6 @@ public class CartService {
                 }
             }};
         }
-    }
-
-    public JSONObject createJsonFromCart(Cart cart) {
-        List<JSONObject> products = createJsonFromCartContent(cart);
-        return new JSONObject() {{
-            try {
-                put("id", cart.getId());
-                put("products", products);
-                put("total_price", String.valueOf(cart.getTotalSum()));
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }};
     }
 
     public void handleDelete(String cartIdString, String productId, String deleteType) {
@@ -91,24 +78,7 @@ public class CartService {
         }
     }
 
-    private List<JSONObject> createJsonFromCartContent(Cart cart) {
-        Map<Product, Integer> products = cart.getProducts();
-        List<JSONObject> cartJson = new ArrayList<>();
-        for (Product product : products.keySet()) {
-            JSONObject newJson = new JSONObject(){{
-                try {
-                    put("id", product.getId());
-                    put("name", product.getName());
-                    put("price", product.getDefaultPrice());
-                    put("category", product.getProductCategory().getName());
-                    put("supplier", product.getSupplier().getName());
-                    put("quantity", products.get(product));
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }};
-            cartJson.add(newJson);
-        }
-        return cartJson;
+    public void emptyCart() {
+        handleDelete(null, null, null);
     }
 }
