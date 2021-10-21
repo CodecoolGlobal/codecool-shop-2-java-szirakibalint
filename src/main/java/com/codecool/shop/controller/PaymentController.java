@@ -3,6 +3,7 @@ package com.codecool.shop.controller;
 import com.codecool.shop.config.TemplateEngineUtil;
 import com.codecool.shop.dao.*;
 import com.codecool.shop.dao.implementation.*;
+import com.codecool.shop.logger.LoggerService;
 import com.codecool.shop.model.Product;
 import com.codecool.shop.model.ProductCategory;
 import com.codecool.shop.model.Supplier;
@@ -53,10 +54,13 @@ public class PaymentController extends HttpServlet {
         String orderId = req.getParameter("order_id");
         CartDao cartDao = CartDaoMem.getInstance();
         OrderDao orderDao = OrderDaoMem.getInstance();
+        ProductDao productDao = ProductDaoMem.getInstance();
         OrderService paymentService = new OrderService(cartDao, orderDao);
+        LoggerService loggerService = new LoggerService(orderDao, cartDao, productDao);
         paymentService.payForOrder(orderId);
 
         PrintWriter writer = resp.getWriter();
+        loggerService.logValidOrder(Integer.parseInt(orderId));
         writer.println(String.format("order with ID %s paid\n", orderId));
     }
 }
