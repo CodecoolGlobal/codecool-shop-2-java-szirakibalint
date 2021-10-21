@@ -30,13 +30,7 @@
 </head>
 
 <body>
-
-<div class="jumbotron text-center">
-    <h1>Codecool Shop</h1>
-    <a id="open-modal" data-toggle="modal" data-target=".bd-example-modal-lg" href="#">
-        Cart
-    </a>
-</div>
+<div th:replace="header.html :: header"></div>
 
 <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
@@ -52,14 +46,14 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Continue shopping</button>
-                <button type="button" class="btn btn-primary" id="go-to-checkout">Go to checkout</button>
+                <button type="button" class="btn btn-primary check-out" id="go-to-checkout">Go to checkout</button>
             </div>
         </div>
     </div>
 </div>
 
 <div class="container">
-    <div class="card">
+    <div class="card col-md-8 col-sm-1 col-lg-12">
         <form action="/" class="filter-form" id="category-selector">
             <label> Category:
                 <select name="category_id" required>
@@ -85,10 +79,9 @@
             <button class="btn btn-primary" type="submit">Filter by supplier</button>
         </form>
     </div>
-
     <div id="products" class="row">
         <div class="col col-sm-12 col-md-6 col-lg-4" th:each="prod,iterStat : ${products}">
-            <div class="card" th:id='${prod.id}'>
+            <div class="card bg-white" th:id='${prod.id}'>
                 <img class="" src="http://placehold.it/400x250/000/fff" th:attr="src='/static/img/product_' + ${prod.id} + '.jpg'" alt="" />
                 <div class="card-header">
                     <h4 class="card-title" th:text="${prod.name}">Product name</h4>
