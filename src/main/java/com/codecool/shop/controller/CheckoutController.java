@@ -1,6 +1,11 @@
 package com.codecool.shop.controller;
 
 import com.codecool.shop.config.TemplateEngineUtil;
+import com.codecool.shop.dao.CartDao;
+import com.codecool.shop.dao.OrderDao;
+import com.codecool.shop.dao.implementation.CartDaoMem;
+import com.codecool.shop.dao.implementation.OrderDaoMem;
+import com.codecool.shop.service.OrderService;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 
@@ -18,6 +23,10 @@ import java.util.Map;
 @WebServlet(urlPatterns = "/checkout")
 public class CheckoutController extends HttpServlet {
 
+    private CartDao cartDao = CartDaoMem.getInstance();
+    private OrderDao orderDao = OrderDaoMem.getInstance();
+    OrderService orderService = new OrderService(cartDao, orderDao);
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
@@ -33,6 +42,7 @@ public class CheckoutController extends HttpServlet {
 
         Enumeration<String> parameterNames = req.getParameterNames();
         Map<String, String> params = new HashMap<>() ;
+        OrderDao orderDao = OrderDaoMem.getInstance();
 
         while (parameterNames.hasMoreElements()) {
             String paramName = parameterNames.nextElement();
@@ -42,6 +52,15 @@ public class CheckoutController extends HttpServlet {
         }
 
         if (validateFormData(params)) {
+
+
+            orderService.addNewOrder(0,0,
+                    params.get("lastname"),
+                    params.get("firstname"),
+                    params.get("country"),
+                    params.get("city"),
+                    params.get("address"));
+            orderService.printALlOrders();
             resp.sendRedirect("/payment");
         }
     }

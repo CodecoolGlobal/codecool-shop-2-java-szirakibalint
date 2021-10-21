@@ -1,19 +1,13 @@
 package com.codecool.shop.controller;
 
 import com.codecool.shop.config.TemplateEngineUtil;
-import com.codecool.shop.dao.CartDao;
-import com.codecool.shop.dao.ProductCategoryDao;
-import com.codecool.shop.dao.ProductDao;
-import com.codecool.shop.dao.SupplierDao;
-import com.codecool.shop.dao.implementation.CartDaoMem;
-import com.codecool.shop.dao.implementation.ProductCategoryDaoMem;
-import com.codecool.shop.dao.implementation.ProductDaoMem;
-import com.codecool.shop.dao.implementation.SupplierDaoMem;
+import com.codecool.shop.dao.*;
+import com.codecool.shop.dao.implementation.*;
 import com.codecool.shop.model.Product;
 import com.codecool.shop.model.ProductCategory;
 import com.codecool.shop.model.Supplier;
 import com.codecool.shop.service.CartService;
-import com.codecool.shop.service.PaymentService;
+import com.codecool.shop.service.OrderService;
 import com.codecool.shop.service.ProductService;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -41,7 +35,8 @@ public class PaymentController extends HttpServlet {
         WebContext context = new WebContext(req, resp, req.getServletContext());
 
         CartDao cartDao = CartDaoMem.getInstance();
-        PaymentService paymentService = new PaymentService(cartDao);
+        OrderDao orderDao = OrderDaoMem.getInstance();
+        OrderService paymentService = new OrderService(cartDao, orderDao);
 
         BigDecimal totalPrice = paymentService.getFullPriceForPayment(cartId);
 
