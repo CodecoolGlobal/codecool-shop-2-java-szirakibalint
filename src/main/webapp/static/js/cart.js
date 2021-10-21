@@ -74,7 +74,7 @@ async function modal() {
         productName.innerText = product.name;
 
         let productPrice = document.createElement("td");
-        productPrice.innerText = product.price;
+        productPrice.innerText = product.price + " USD";
 
         let productDecrease = document.createElement("td");
         let productDecreaseButton = document.createElement("a");
@@ -128,7 +128,8 @@ async function modal() {
 
     let totalPrice = document.createElement("span");
     totalPrice.className = "price text-success";
-    totalPrice.innerText = cartContent.total_price;
+    totalPrice.innerText = cartContent.total_price + " USD";
+    totalPrice.id = "total-price";
 
     totalText.appendChild(totalPrice);
 
@@ -178,8 +179,9 @@ async function quantityChange(id) {
     const url = "/cart?product-id=" + id + "&cart-id=" + sessionStorage.getItem("cart-id");
     let data = await apiGet(url);
     let count = data.quantity;
-    console.log(count)
+    let totalPrice = data.total_price;
     document.getElementById("quantity-" + id).innerText = count;
+    document.getElementById("total-price").innerText = totalPrice + " USD";
     if (count == 0) {
         await modal();
     }
