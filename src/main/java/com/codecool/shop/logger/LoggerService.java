@@ -26,6 +26,7 @@ public class LoggerService {
                 e.printStackTrace();
             }
         }};
+        String filename = String.valueOf(order.getId()) + String.valueOf(order.getOrderedAt());
         try {
             FileWriter file = new FileWriter("idk.json");
             file.write(jsonObject.toString());
