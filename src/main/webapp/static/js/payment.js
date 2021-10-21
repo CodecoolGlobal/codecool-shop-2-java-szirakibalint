@@ -24,7 +24,7 @@ function getCreditCardFrom() {
               </div>
               <div class="form-group">
                 <label for="card-holder">Name on card:</label>
-                <input required type="text" class="form-control" id="card-owner" placeholder="name on card">
+                <input required minlength="5" type="text" class="form-control" id="card-owner" placeholder="name on card">
               </div>
               <button type="submit" class="btn btn-primary">Pay with Credit Card</button>
             </form>`
