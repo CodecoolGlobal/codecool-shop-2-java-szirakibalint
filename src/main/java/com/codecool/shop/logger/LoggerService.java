@@ -22,9 +22,9 @@ public class LoggerService {
         this.cartService = new CartService(cartDao, productDao);
     }
 
-    public void logValidOrder(int orderId) {
+    public void logOrder(int orderId) {
         Order order = orderDao.find(orderId);
-        JSONObject orderJson = createJSONFromValidOrder(order);
+        JSONObject orderJson = order.toJson();
         String filename = createFileName(order);
         try {
             createFile(filename);
@@ -32,23 +32,6 @@ public class LoggerService {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    private JSONObject createJSONFromValidOrder(Order order) {
-        return new JSONObject(){{
-            try {
-                put("status", "paid");
-                put("name", order.getFirstName() + " " + order.getLastName());
-                put("full_address", new JSONObject(){{
-                    put("country", order.getCountry());
-                    put("city", order.getCity());
-                    put("address", order.getAddress());
-                }});
-                put("cart", cartService.createJsonFromCart(order.getCart()));
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }};
     }
 
     private String createFileName(Order order) {
