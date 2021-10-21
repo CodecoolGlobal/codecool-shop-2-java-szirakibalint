@@ -11,9 +11,14 @@ public class Order {
     private LocalDateTime orderedAt;
     private boolean paidFor;
     private final int userId;
-    private Map<Product, Integer> products = new HashMap<>();
+    private Map<Product, Integer> products;
 
-    public Order(int userId, Cart cart){
+    public Order(String firstName, String lastName, String country, String city, String address, int userId, Cart cart){
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.country = country;
+        this.city = city;
+        this.address = address;
         this.id = idCounter;
         idCounter++;
 
