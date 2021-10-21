@@ -20,7 +20,7 @@ function getCreditCardFrom() {
                 <input required minlength="13" maxlength="19" type="text" class="form-control" id="card-number" placeholder="1234 1234 1234 1234">
                 <input required min="1" max="12" type="number" class="form-control" id="expiration-month" placeholder="MM">
                 <input required min="1" max="99" type="number" class="form-control" id="expiration-year" placeholder="YY">
-                <input required type="text" class="form-control" id="cvv" placeholder="123">
+                <input required min="0" max="999" type="number" class="form-control" id="cvv" placeholder="123">
               </div>
               <div class="form-group">
                 <label for="card-holder">Name on card:</label>
