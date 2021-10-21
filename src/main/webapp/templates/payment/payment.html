@@ -36,7 +36,7 @@
 </div>
 
 <div class="payment-page-container">
-    <p th:text="'Total price: ' + ${totalPrice}">Total price here</p>
+    <p th:text="'Total price: ' + ${totalPrice} + ' USD'">Total price here</p>
     <div id="payment" th:attr="data-order-id=${order_id}">
         <label for="payment-selector">Choose a payment method:</label>
         <form action="" id="payment-selector">
