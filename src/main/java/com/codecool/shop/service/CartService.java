@@ -47,6 +47,7 @@ public class CartService {
                 List<JSONObject> products = createJsonFromCartContent(cart);
                 return new JSONObject() {{
                     try {
+                        put("id", cart.getId());
                         put("products", products);
                         put("total_price", String.valueOf(cart.getTotalSum()));
                     } catch (JSONException e) {
