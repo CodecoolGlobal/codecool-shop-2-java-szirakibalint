@@ -30,6 +30,7 @@ async function buildModal() {
         let productQuantity = document.createElement("p");
         productQuantity.innerText = product.quantity;
         productQuantity.className = "quantity";
+        productQuantity.id = "quantity-" + product.id;
 
         let increaseProduct = document.createElement("a");
         increaseProduct.href = "#";
@@ -59,7 +60,7 @@ function setProductIncreaserEvent() {
             const url = "/cart";
             const id = button.dataset.id;
             await apiPost(url, {"product_id" : id})
-            await buildModal();
+            await quantityChange(button.dataset.id);
         })
     }
 }
@@ -70,9 +71,16 @@ function setProductDecreaserEvent() {
         button.addEventListener("click", async () => {
             const url = "cart?product-id=" + button.dataset.id + "&type=single";
             await apiDelete(url);
-            await buildModal();
+            await quantityChange(button.dataset.id);
         })
     }
+}
+
+async function quantityChange(id) {
+    const url = "/cart?product-id=" + id;
+    let data = await apiGet(url);
+    let count = data[0].quantity;
+    document.getElementById("quantity-" + id).innerText = count;
 }
 
 function setButtonEvents() {
