@@ -3,8 +3,10 @@ package com.codecool.shop.controller;
 import com.codecool.shop.config.TemplateEngineUtil;
 import com.codecool.shop.dao.CartDao;
 import com.codecool.shop.dao.OrderDao;
+import com.codecool.shop.dao.ProductDao;
 import com.codecool.shop.dao.implementation.CartDaoMem;
 import com.codecool.shop.dao.implementation.OrderDaoMem;
+import com.codecool.shop.dao.implementation.ProductDaoMem;
 import com.codecool.shop.model.Order;
 import com.codecool.shop.service.OrderService;
 import org.thymeleaf.TemplateEngine;
@@ -39,7 +41,8 @@ public class CheckoutController extends HttpServlet {
 
         CartDao cartDao = CartDaoMem.getInstance();
         OrderDao orderDao = OrderDaoMem.getInstance();
-        OrderService orderService = new OrderService(cartDao, orderDao);
+        ProductDao productDao = ProductDaoMem.getInstance();
+        OrderService orderService = new OrderService(cartDao, orderDao, productDao);
 
         Enumeration<String> parameterNames = req.getParameterNames();
         Map<String, String> params = new HashMap<>();
@@ -50,8 +53,11 @@ public class CheckoutController extends HttpServlet {
 
             params.put(paramName, paramValue);
         }
-        if (orderService.checkoutOrder(params)) {
-            resp.sendRedirect("/payment");
+        Integer orderId = orderService.checkoutOrder(params);
+        if (orderId != null) {
+            resp.sendRedirect(String.format("/payment?order_id=%s", orderId));
+        } else {
+            resp.sendRedirect("/checkout");
         }
     }
 }
