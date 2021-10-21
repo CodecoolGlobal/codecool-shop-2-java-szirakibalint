@@ -88,9 +88,4 @@ public class Order {
                 " " + address +
                 " " + products.toString();
     }
-
-
-    public int getId() {
-        return id;
-    }
 }

@@ -24,10 +24,6 @@ import java.util.Map;
 @WebServlet(urlPatterns = "/checkout")
 public class CheckoutController extends HttpServlet {
 
-    private CartDao cartDao = CartDaoMem.getInstance();
-    private OrderDao orderDao = OrderDaoMem.getInstance();
-    OrderService orderService = new OrderService(cartDao, orderDao);
-
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
@@ -41,11 +37,12 @@ public class CheckoutController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 
+        CartDao cartDao = CartDaoMem.getInstance();
+        OrderDao orderDao = OrderDaoMem.getInstance();
+        OrderService orderService = new OrderService(cartDao, orderDao);
+
         Enumeration<String> parameterNames = req.getParameterNames();
         Map<String, String> params = new HashMap<>();
-        OrderDao orderDao = OrderDaoMem.getInstance();
-        CartDao cartDao = CartDaoMem.getInstance();
-        OrderService orderService = new OrderService(cartDao, orderDao);
 
         while (parameterNames.hasMoreElements()) {
             String paramName = parameterNames.nextElement();

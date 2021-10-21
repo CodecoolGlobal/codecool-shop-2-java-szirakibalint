@@ -13,6 +13,7 @@ import java.util.Map;
 public class OrderService {
 
     private static final int DEFAULT_CART_ID = 0;
+    private static final int DEFAULT_USER_ID = 0;
 
     private final CartDao cartDao;
     private final OrderDao orderDao;
@@ -51,7 +52,7 @@ public class OrderService {
 
     public boolean checkoutOrder(Map<String, String> params) {
         if (validateFormData(params)) {
-            addNewOrder(0,0,
+            addNewOrder(DEFAULT_USER_ID,DEFAULT_CART_ID,
                     params.get("lastname"),
                     params.get("firstname"),
                     params.get("country"),
