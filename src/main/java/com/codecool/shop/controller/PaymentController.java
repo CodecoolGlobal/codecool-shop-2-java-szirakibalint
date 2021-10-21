@@ -20,6 +20,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -47,4 +48,15 @@ public class PaymentController extends HttpServlet {
         engine.process("payment/payment.html", context, resp.getWriter());
     }
 
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        String orderId = req.getParameter("order_id");
+        CartDao cartDao = CartDaoMem.getInstance();
+        OrderDao orderDao = OrderDaoMem.getInstance();
+        OrderService paymentService = new OrderService(cartDao, orderDao);
+        paymentService.payForOrder(orderId);
+
+        PrintWriter writer = resp.getWriter();
+        writer.println(String.format("order with ID %s paid\n", orderId));
+    }
 }
