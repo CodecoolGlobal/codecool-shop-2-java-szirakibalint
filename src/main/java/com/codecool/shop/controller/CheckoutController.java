@@ -54,14 +54,14 @@ public class CheckoutController extends HttpServlet {
         if (validateFormData(params)) {
 
 
-            orderService.addNewOrder(0,0,
+            int orderId = orderService.addNewOrder(0,0,
                     params.get("lastname"),
                     params.get("firstname"),
                     params.get("country"),
                     params.get("city"),
                     params.get("address"));
             orderService.printALlOrders();
-            resp.sendRedirect("/payment");
+            resp.sendRedirect(String.format("/payment?order_id=%s", orderId));
         }
     }
 
