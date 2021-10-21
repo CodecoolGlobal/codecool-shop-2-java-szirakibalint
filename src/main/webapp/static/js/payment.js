@@ -17,7 +17,7 @@ function getCreditCardFrom() {
     return `<form id="payment-form">
               <label for="card-details">Enter Credit Card details:</label>
               <div class="form-group" id="card-details">
-                <input required type="text" class="form-control" id="card-number" placeholder="1234 1234 1234 1234">
+                <input required minlength="13" maxlength="19" type="text" class="form-control" id="card-number" placeholder="1234 1234 1234 1234">
                 <input required type="number" class="form-control" id="expiration-month" placeholder="MM">
                 <input required type="number" class="form-control" id="expiration-year" placeholder="YY">
                 <input required type="text" class="form-control" id="cvv" placeholder="123">
