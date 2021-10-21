@@ -15,7 +15,7 @@ public class LoggerService {
     public void logOrder(int orderId) {
         Order order = orderDao.find(orderId);
         JSONObject jsonObject = new JSONObject(){{
-            order.get
+            
         }};
     }
 }
