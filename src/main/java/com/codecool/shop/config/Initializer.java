@@ -34,13 +34,13 @@ public class Initializer implements ServletContextListener {
         Supplier other = new Supplier("Other", "Everything else.");
         supplierDataStore.add(other);
         Supplier cc = new Supplier("Codecool", "Exciting games from our best & brightest.");
-        supplierDataStore.add(other);
+        supplierDataStore.add(cc);
 
 
-        ProductCategory adventure = new ProductCategory("Adventure", "Games", "Pack your bag, say goodbye to your friends in the Shire.");
+        ProductCategory adventure = new ProductCategory("Action, adventure", "Games", "Pack your bag, say goodbye to your friends in the Shire.");
         productCategoryDataStore.add(adventure);
 
-        ProductCategory sandbox = new ProductCategory("Sandbox", "Games", "Unleash your creativity.");
+        ProductCategory sandbox = new ProductCategory("Sandbox, simulation", "Games", "Unleash your creativity.");
         productCategoryDataStore.add(sandbox);
 
         ProductCategory strategy = new ProductCategory("Strategy", "Games", "Strategy games requier thinking. In advance.");
@@ -55,5 +55,10 @@ public class Initializer implements ServletContextListener {
         productDataStore.add(new Product("The Battle for Wesnoth", new BigDecimal("0.00"), "USD", "Wizards. Orcs. Trolls. Mermaids. Open-source turn-based strategy game.", strategy, other));
         productDataStore.add(new Product("Journey to the Center of the Earth", new BigDecimal("1.99"), "USD", ".", adventure, other));
         productDataStore.add(new Product("Private Static Final Fantasy 2", new BigDecimal("4.20"), "USD", "Fantasy_final_v2_finalversion_2.exe", adventure, cc));
+        productDataStore.add(new Product("Terraria", new BigDecimal("9.20"), "USD", "Farming, I guess?", sandbox, other));
+        productDataStore.add(new Product("Yu-Gi-Oh! Power of Chaos: Yugi the Destiny (2003)", new BigDecimal("1.20"), "USD", "Try to play your cards right.", strategy, other));
+        productDataStore.add(new Product("The Sims 2", new BigDecimal("19.99"), "USD", "Throw a pool party.", sandbox, ea));
+        productDataStore.add(new Product("Minecraft Dungeons", new BigDecimal("9.99"), "USD", "", adventure, mojang));
+        productDataStore.add(new Product("Fifa 2004", new BigDecimal("9.99"), "USD", "Great music.", sandbox, ea));
     }
 }
