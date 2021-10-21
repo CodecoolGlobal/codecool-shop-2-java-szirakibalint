@@ -4,14 +4,8 @@ import com.codecool.shop.config.TemplateEngineUtil;
 import com.codecool.shop.dao.*;
 import com.codecool.shop.dao.implementation.*;
 import com.codecool.shop.logger.LoggerService;
-import com.codecool.shop.model.Product;
-import com.codecool.shop.model.ProductCategory;
-import com.codecool.shop.model.Supplier;
 import com.codecool.shop.service.CartService;
 import com.codecool.shop.service.OrderService;
-import com.codecool.shop.service.ProductService;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 
@@ -23,7 +17,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
-import java.util.List;
 
 @WebServlet(urlPatterns = {"/payment"})
 public class PaymentController extends HttpServlet {
@@ -39,7 +32,8 @@ public class PaymentController extends HttpServlet {
 
         CartDao cartDao = CartDaoMem.getInstance();
         OrderDao orderDao = OrderDaoMem.getInstance();
-        OrderService paymentService = new OrderService(cartDao, orderDao);
+        ProductDao productDao = ProductDaoMem.getInstance();
+        OrderService paymentService = new OrderService(cartDao, orderDao, productDao);
 
         BigDecimal totalPrice = paymentService.getFullPriceForPayment(cartId);
 
@@ -55,12 +49,14 @@ public class PaymentController extends HttpServlet {
         CartDao cartDao = CartDaoMem.getInstance();
         OrderDao orderDao = OrderDaoMem.getInstance();
         ProductDao productDao = ProductDaoMem.getInstance();
-        OrderService paymentService = new OrderService(cartDao, orderDao);
+        CartService cartService = new CartService(cartDao, productDao);
+        OrderService paymentService = new OrderService(cartDao, orderDao, productDao);
         LoggerService loggerService = new LoggerService(orderDao, cartDao, productDao);
         paymentService.payForOrder(orderId);
 
         PrintWriter writer = resp.getWriter();
-        loggerService.logValidOrder(Integer.parseInt(orderId));
+        loggerService.logOrder(Integer.parseInt(orderId));
+        cartService.emptyCart();
         writer.println(String.format("order with ID %s paid\n", orderId));
     }
 }
