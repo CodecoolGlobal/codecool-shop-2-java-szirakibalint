@@ -23,11 +23,11 @@ public class CartService {
         this.productDao = productDao;
     }
 
-    public void addToCart(String productId, String userId) {
+    public void handlePost(String productId, String cartIdString) {
         try {
-            int cartId = (userId == null)
+            int cartId = (cartIdString == null)
                     ? DEFAULT_CART_ID
-                    : cartDao.getCartByUserId(Integer.parseInt(userId)).getId();
+                    : cartDao.getCartByUserId(Integer.parseInt(cartIdString)).getId();
             if (productId == null) {
                 return;
             }
@@ -38,9 +38,9 @@ public class CartService {
         }
     }
 
-    public JSONObject handleGet(String userId, String productId) {
-        Cart cart = (userId != null)
-                ? cartDao.getCartByUserId(Integer.parseInt(userId))
+    public JSONObject handleGet(String cartIdString, String productId) {
+        Cart cart = (cartIdString != null)
+                ? cartDao.getCartByUserId(Integer.parseInt(cartIdString))
                 : cartDao.getCartById(DEFAULT_CART_ID);
         if (productId == null) {
             if (cart != null) {
@@ -70,8 +70,8 @@ public class CartService {
         }
     }
 
-    public void handleDelete(String userId, String productId, String deleteType) {
-        int cartId = (userId == null) ? DEFAULT_CART_ID : Integer.parseInt(userId);
+    public void handleDelete(String cartIdString, String productId, String deleteType) {
+        int cartId = (cartIdString == null) ? DEFAULT_CART_ID : Integer.parseInt(cartIdString);
         if (productId == null) {
             cartDao.removeAllFromCart(cartId);
         } else {
