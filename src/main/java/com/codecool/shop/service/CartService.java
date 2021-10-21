@@ -4,6 +4,7 @@ import com.codecool.shop.dao.CartDao;
 import com.codecool.shop.dao.ProductDao;
 import com.codecool.shop.model.Cart;
 import com.codecool.shop.model.Product;
+import com.google.gson.Gson;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -105,5 +106,11 @@ public class CartService {
             cartJson.add(newJson);
         }
         return cartJson;
+    }
+
+    public Cart getCartFromJson(String cartJson){
+        Cart cart = new Gson().fromJson(cartJson, Cart.class);
+
+        return cart;
     }
 }
