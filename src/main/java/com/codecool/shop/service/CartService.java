@@ -38,28 +38,33 @@ public class CartService {
         }
     }
 
-    public List<JSONObject> handleGet(String userId, String productId) {
+    public JSONObject handleGet(String userId, String productId) {
         Cart cart = (userId != null)
                 ? cartDao.getCartByUserId(Integer.parseInt(userId))
                 : cartDao.getCartById(DEFAULT_CART_ID);
         if (productId == null) {
             if (cart != null) {
-                return createJsonFromCart(cart);
+                List<JSONObject> products = createJsonFromCartContent(cart);
+                return new JSONObject() {{
+                    try {
+                        put("products", products);
+                        put("total_price", String.valueOf(cart.getTotalSum()));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }};
             } else {
-                return new ArrayList<>();
+                return new JSONObject();
             }
         } else {
             Product product = productDao.find(Integer.parseInt(productId));
             int quantity = cartDao.getProductQuantity(cart.getId(), product);
-            JSONObject quantityJson = new JSONObject(){{
+            return new JSONObject(){{
                 try {
                     put("quantity", quantity);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-            }};
-            return new ArrayList<>(){{
-                add(quantityJson);
             }};
         }
     }
@@ -80,7 +85,7 @@ public class CartService {
         }
     }
 
-    private List<JSONObject> createJsonFromCart(Cart cart) {
+    private List<JSONObject> createJsonFromCartContent(Cart cart) {
         Map<Product, Integer> products = cart.getProducts();
         List<JSONObject> cartJson = new ArrayList<>();
         for (Product product : products.keySet()) {
