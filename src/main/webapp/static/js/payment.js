@@ -47,6 +47,7 @@ function initPaymentFormSubmitEvent(paymentMethod) {
         e.preventDefault();
         await fetch(`/payment?order_id=${getOrderId()}`, {method: 'POST'});
         alert(`${getTotalPrice()} paid successfully with ${paymentMethod}`);
+        window.location.replace("/");
     })
 }
 
