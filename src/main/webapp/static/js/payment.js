@@ -3,11 +3,11 @@ function getPayPalForm() {
              <form id="payment-form">
               <div class="form-group">
                 <label for="email">Email:</label>
-                <input type="email" class="form-control" id="paypal-email" placeholder="email">
+                <input required minlength="6" type="email" class="form-control" id="paypal-email" placeholder="email">
               </div>
               <div class="form-group">
                 <label for="password">Password:</label>
-                <input type="password" class="form-control" id="paypal-password" placeholder="password">
+                <input required minlength="6" type="password" class="form-control" id="paypal-password" placeholder="password">
               </div>
               <button type="submit" class="btn btn-primary">Pay with PayPal</button>
             </form>`
