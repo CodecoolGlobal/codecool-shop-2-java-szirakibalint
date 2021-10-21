@@ -52,33 +52,49 @@
     </div>
 </div>
 
-<div class="container">
-    <div class="card col-md-8 col-sm-1 col-lg-12">
-        <form action="/" class="filter-form" id="category-selector">
-            <label> Category:
-                <select name="category_id" required>
-                    <option th:each="cat : ${categories}"
-                            th:text="${cat.name}"
-                            th:value="${cat.id}">
-                        category name here
-                    </option>
-                </select>
-            </label>
-            <button class="btn btn-primary" type="submit">Filter by category</button>
-        </form>
-        <form action="/" class="filter-form" id="supplier-selector">
-            <label> Supplier:
-                <select name="supplier_id" required>
-                    <option th:each="sup : ${suppliers}"
-                            th:text="${sup.name}"
-                            th:value="${sup.id}">
-                        supplier name here
-                    </option>
-                </select>
-            </label>
-            <button class="btn btn-primary" type="submit">Filter by supplier</button>
-        </form>
+<div class="modal fade bd-filter-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Filter products</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="/" class="filter-form" id="category-selector">
+                    <label> Category:
+                        <select name="category_id" required>
+                            <option th:each="cat : ${categories}"
+                                    th:text="${cat.name}"
+                                    th:value="${cat.id}">
+                                category name here
+                            </option>
+                        </select>
+                    </label>
+                    <button class="btn btn-primary" type="submit">Filter by category</button>
+                </form>
+                <form action="/" class="filter-form" id="supplier-selector">
+                    <label> Supplier:
+                        <select name="supplier_id" required>
+                            <option th:each="sup : ${suppliers}"
+                                    th:text="${sup.name}"
+                                    th:value="${sup.id}">
+                                supplier name here
+                            </option>
+                        </select>
+                    </label>
+                    <button class="btn btn-primary" type="submit">Filter by supplier</button>
+                </form>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
     </div>
+</div>
+
+<div class="container">
+    <button class="btn btn-outline-info" data-toggle="modal" data-target=".bd-filter-modal-lg">Filter products</button>
     <div id="products" class="row">
         <div class="col col-sm-12 col-md-6 col-lg-4" th:each="prod,iterStat : ${products}">
             <div class="card bg-white" th:id='${prod.id}'>
