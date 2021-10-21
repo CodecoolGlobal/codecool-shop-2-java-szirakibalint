@@ -27,11 +27,13 @@ public class Initializer implements ServletContextListener {
 
         Supplier mojang = new Supplier("Mojang Studios", "Swedish video game company.");
         supplierDataStore.add(mojang);
-        Supplier ea = new Supplier("EA", "At the intersection of arts and eletronics.");
+        Supplier ea = new Supplier("EA", "At the intersection of arts and electronics.");
         supplierDataStore.add(ea);
         Supplier se = new Supplier("Square Enix", "They have a cool name.");
         supplierDataStore.add(se);
-        Supplier other = new Supplier("Square Enix", "Everything else.");
+        Supplier other = new Supplier("Other", "Everything else.");
+        supplierDataStore.add(other);
+        Supplier cc = new Supplier("Codecool", "Exciting games from our best & brightest.");
         supplierDataStore.add(other);
 
 
@@ -50,6 +52,6 @@ public class Initializer implements ServletContextListener {
         productDataStore.add(new Product("Tomb Raider 3", new BigDecimal("5.99"), "USD", "Lots of swimming.", adventure, se));
         productDataStore.add(new Product("Tomb Raider: The Last Revelation", new BigDecimal("5.99"), "USD", "Does she even raid tombs?", adventure, se));
         productDataStore.add(new Product("Minecraft", new BigDecimal("19.99"), "USD", "Build a house made of dirt.", sandbox, mojang));
-        productDataStore.add(new Product("Battle for Wesnoth", new BigDecimal("0.00"), "USD", "Wizards. Orcs. Trolls. Mermaids. Open-source turn-based strategy game.", strategy, other));
+        productDataStore.add(new Product("The Battle for Wesnoth", new BigDecimal("0.00"), "USD", "Wizards. Orcs. Trolls. Mermaids. Open-source turn-based strategy game.", strategy, other));
     }
 }
