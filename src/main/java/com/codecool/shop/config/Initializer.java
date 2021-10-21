@@ -53,5 +53,7 @@ public class Initializer implements ServletContextListener {
         productDataStore.add(new Product("Tomb Raider: The Last Revelation", new BigDecimal("5.99"), "USD", "Does she even raid tombs?", adventure, se));
         productDataStore.add(new Product("Minecraft", new BigDecimal("19.99"), "USD", "Build a house made of dirt.", sandbox, mojang));
         productDataStore.add(new Product("The Battle for Wesnoth", new BigDecimal("0.00"), "USD", "Wizards. Orcs. Trolls. Mermaids. Open-source turn-based strategy game.", strategy, other));
+        productDataStore.add(new Product("Journey to the Center of the Earth", new BigDecimal("1.99"), "USD", ".", adventure, other));
+        productDataStore.add(new Product("Private Static Final Fantasy 2", new BigDecimal("4.20"), "USD", "Fantasy_final_v2_finalversion_2.exe", adventure, cc));
     }
 }
