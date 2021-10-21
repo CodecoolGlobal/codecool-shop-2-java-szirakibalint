@@ -2,8 +2,12 @@ package com.codecool.shop.service;
 
 import com.codecool.shop.dao.CartDao;
 import com.codecool.shop.dao.OrderDao;
+import com.codecool.shop.dao.ProductDao;
+import com.codecool.shop.logger.LoggerService;
 import com.codecool.shop.model.Cart;
+import com.codecool.shop.model.InvalidOrder;
 import com.codecool.shop.model.Order;
+import com.codecool.shop.model.ValidOrder;
 
 import java.math.BigDecimal;
 import java.util.Enumeration;
@@ -17,10 +21,12 @@ public class OrderService {
 
     private final CartDao cartDao;
     private final OrderDao orderDao;
+    private final ProductDao productDao;
 
-    public OrderService(CartDao cartDao, OrderDao orderDao) {
+    public OrderService(CartDao cartDao, OrderDao orderDao, ProductDao productDao) {
         this.cartDao = cartDao;
         this.orderDao = orderDao;
+        this.productDao = productDao;
     }
 
     public BigDecimal getFullPriceForPayment(String cartId) {
@@ -34,8 +40,14 @@ public class OrderService {
         orderDao.getAll().forEach(System.out::println);
     }
 
-    public int addNewOrder(int userId, int cartId, String lastName, String firstName, String country, String city, String address) {
-        Order order = new Order(firstName, lastName, country, city, address, userId, cartDao.getCartById(cartId));
+    public int addNewValidOrder(int userId, int cartId, String lastName, String firstName, String country, String city, String address) {
+        Order order = new ValidOrder(firstName, lastName, country, city, address, userId, cartDao.getCartById(cartId));
+        orderDao.add(order);
+        return order.getId();
+    }
+
+    public int addNewInvalidOrder(String message, Cart cart) {
+        Order order = new InvalidOrder(message, cart);
         orderDao.add(order);
         return order.getId();
     }
@@ -49,24 +61,27 @@ public class OrderService {
         }
     }
 
-    public boolean checkoutOrder(Map<String, String> params) {
+    public Integer checkoutOrder(Map<String, String> params) {
         if (validateFormData(params)) {
-            addNewOrder(DEFAULT_USER_ID,DEFAULT_CART_ID,
+            int orderId = addNewValidOrder(DEFAULT_USER_ID,DEFAULT_CART_ID,
                     params.get("lastname"),
                     params.get("firstname"),
                     params.get("country"),
                     params.get("city"),
                     params.get("address"));
-            return true;
+            return orderId;
         }
-        return false;
+        return null;
     }
 
     private boolean validateFormData(Map<String, String> params){
-        for (String value : params.values()){
-            if (value.equals("")) {
+        for (Map.Entry<String, String> entry : params.entrySet()) {
+            if (entry.getValue().equals("")) {
+                int orderId = addNewInvalidOrder("missing " + entry.getKey(), cartDao.getCartById(DEFAULT_CART_ID));
+                LoggerService loggerService = new LoggerService(orderDao, cartDao, productDao);
+                loggerService.logOrder(orderId);
                 return false;
-            };
+            }
         }
         return true;
     }
