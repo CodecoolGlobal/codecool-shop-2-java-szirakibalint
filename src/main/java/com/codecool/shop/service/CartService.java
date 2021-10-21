@@ -63,6 +63,7 @@ public class CartService {
             return new JSONObject(){{
                 try {
                     put("quantity", quantity);
+                    put("total_price", cart.getTotalSum());
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
