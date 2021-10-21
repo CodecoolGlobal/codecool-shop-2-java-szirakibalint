@@ -38,4 +38,9 @@ public class OrderDaoMem implements OrderDao {
     public void remove(int id) {
 
     }
+
+    @Override
+    public List<Order> getAll() {
+        return data;
+    }
 }
