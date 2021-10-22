@@ -31,9 +31,7 @@
 
 <body>
 
-<div class="jumbotron text-center">
-    <h1>Codecool Shop</h1>
-</div>
+<div th:replace="simple-header.html :: simple-header"></div>
 
 <div class="payment-page-container">
     <p id="total-price" th:text="'Total price: ' + ${totalPrice} + ' USD'" th:attr="data-total-price=${totalPrice}">Total price here</p>
