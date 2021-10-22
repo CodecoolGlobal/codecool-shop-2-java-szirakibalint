@@ -1,5 +1,8 @@
 package com.codecool.shop.model;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.math.BigDecimal;
 import java.util.*;
 
@@ -82,5 +85,39 @@ public class Cart {
             totalSum = totalSum.add(multipliedValue);
         }
         return totalSum;
+    }
+
+    public JSONObject createJsonFromCart() {
+        List<JSONObject> products = createJsonFromCartContent();
+        BigDecimal totalSum = this.getTotalSum();
+        return new JSONObject() {{
+            try {
+                put("id", id);
+                put("products", products);
+                put("total_price", String.valueOf(totalSum));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }};
+    }
+
+    private List<JSONObject> createJsonFromCartContent() {
+        List<JSONObject> cartJson = new ArrayList<>();
+        for (Product product : products.keySet()) {
+            JSONObject newJson = new JSONObject(){{
+                try {
+                    put("id", product.getId());
+                    put("name", product.getName());
+                    put("price", product.getDefaultPrice());
+                    put("category", product.getProductCategory().getName());
+                    put("supplier", product.getSupplier().getName());
+                    put("quantity", products.get(product));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }};
+            cartJson.add(newJson);
+        }
+        return cartJson;
     }
 }

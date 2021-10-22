@@ -3,8 +3,11 @@ package com.codecool.shop.controller;
 import com.codecool.shop.config.TemplateEngineUtil;
 import com.codecool.shop.dao.CartDao;
 import com.codecool.shop.dao.OrderDao;
+import com.codecool.shop.dao.ProductDao;
 import com.codecool.shop.dao.implementation.CartDaoMem;
 import com.codecool.shop.dao.implementation.OrderDaoMem;
+import com.codecool.shop.dao.implementation.ProductDaoMem;
+import com.codecool.shop.model.Order;
 import com.codecool.shop.service.OrderService;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
@@ -23,10 +26,6 @@ import java.util.Map;
 @WebServlet(urlPatterns = "/checkout")
 public class CheckoutController extends HttpServlet {
 
-    private CartDao cartDao = CartDaoMem.getInstance();
-    private OrderDao orderDao = OrderDaoMem.getInstance();
-    OrderService orderService = new OrderService(cartDao, orderDao);
-
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
@@ -40,9 +39,13 @@ public class CheckoutController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 
-        Enumeration<String> parameterNames = req.getParameterNames();
-        Map<String, String> params = new HashMap<>() ;
+        CartDao cartDao = CartDaoMem.getInstance();
         OrderDao orderDao = OrderDaoMem.getInstance();
+        ProductDao productDao = ProductDaoMem.getInstance();
+        OrderService orderService = new OrderService(cartDao, orderDao, productDao);
+
+        Enumeration<String> parameterNames = req.getParameterNames();
+        Map<String, String> params = new HashMap<>();
 
         while (parameterNames.hasMoreElements()) {
             String paramName = parameterNames.nextElement();
@@ -50,25 +53,11 @@ public class CheckoutController extends HttpServlet {
 
             params.put(paramName, paramValue);
         }
-
-        if (validateFormData(params)) {
-            int orderId = orderService.addNewOrder(0,0,
-                    params.get("lastname"),
-                    params.get("firstname"),
-                    params.get("country"),
-                    params.get("city"),
-                    params.get("address"));
+        Integer orderId = orderService.checkoutOrder(params);
+        if (orderId != null) {
             resp.sendRedirect(String.format("/payment?order_id=%s", orderId));
+        } else {
+            resp.sendRedirect("/checkout");
         }
     }
-
-    private boolean validateFormData(Map<String, String> params){
-        for (String value : params.values()){
-            if (value.equals("")) {
-                return false;
-            }
-        }
-        return true;
-    }
-
 }

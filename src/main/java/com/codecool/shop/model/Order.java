@@ -1,56 +1,41 @@
 package com.codecool.shop.model;
 
+import org.json.JSONObject;
+
+import javax.management.remote.JMXServerErrorException;
 import java.time.LocalDateTime;
 import java.util.Map;
 
-public class Order {
+public abstract class Order {
     private static int idCounter = 0;
 
-    private final int id;
-    private final String firstName;
-    private final String lastName;
-    private final String country;
-    private final String city;
-    private final String address;
-    private LocalDateTime orderedAt;
+    protected final int id;
+    protected final LocalDateTime orderedAt;
     private boolean paidFor = false;
-    private final int userId;
-    private Map<Product, Integer> products;
+    protected final Cart cart;
 
-    public Order(String firstName, String lastName, String country, String city, String address, int userId, Cart cart){
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.country = country;
-        this.city = city;
-        this.address = address;
+    public Order(Cart cart) {
         this.id = idCounter;
         idCounter++;
-
-        this.userId = userId;
-        products = cart.getProducts();
         this.orderedAt = LocalDateTime.now();
+        this.cart = cart;
+    }
 
+    public int getId() {
+        return id;
+    }
+
+    public LocalDateTime getOrderedAt() {
+        return orderedAt;
     }
 
     public void pay(){
-        if (!paidFor) {
+        if (!paidFor && this instanceof ValidOrder) {
             this.paidFor = true;
         } else {
             throw new RuntimeException("already paid for this!!");
         }
     }
 
-    @Override
-    public String toString() {
-        return orderedAt +
-                " " + firstName +
-                " " + lastName +
-                " " + address +
-                " " + products.toString();
-    }
-
-
-    public int getId() {
-        return id;
-    }
+    public abstract JSONObject toJson();
 }
