@@ -1,3 +1,28 @@
+.navbar {
+    display: flex;
+    justify-content: space-evenly;
+    vertical-align: center;
+    margin-bottom: 5rem;
+}
+
+.card-body {
+    background-color: white;
+}
+
+#open-modal {
+    text-decoration: none;
+}
+
+.navbar {
+    background: rgb(178,153,255);
+    background: linear-gradient(61deg, rgba(178,153,255,1) 0%, rgba(112,51,255,1) 100%);
+
+}
+
+.navbar a {
+    color: white;
+}
+
 .glyphicon {
     margin-right:5px;
 }

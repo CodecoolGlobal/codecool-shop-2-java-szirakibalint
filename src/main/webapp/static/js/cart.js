@@ -1,5 +1,6 @@
 function setCartEvent() {
     let cartButton = document.getElementById("open-modal");
+    console.log(cartButton);
     cartButton.addEventListener("click", async () => {
         await modal();
     })
@@ -223,8 +224,10 @@ async function apiGet(url) {
 }
 
 function setCheckoutButtonEvent(){
-    const button = document.getElementById("go-to-checkout")
-    button.addEventListener('click', ()=>window.location='/checkout')
+    const buttons = document.getElementsByClassName("check-out");
+    for (let button of buttons) {
+        button.addEventListener('click', ()=>window.location='/checkout');
+    }
 }
 async function apiDelete(url, payload="") {
     await fetch(url, {

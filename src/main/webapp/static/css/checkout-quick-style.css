@@ -1,0 +1,10 @@
+.container {
+    margin-top: -3rem;
+    margin-bottom: 2rem;
+    display: flex;
+    justify-content: center;
+}
+
+#go-to-payment {
+    margin-top: 1rem;
+}

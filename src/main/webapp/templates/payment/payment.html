@@ -5,7 +5,7 @@
     <meta name="author" content="Codecool" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
 
-    <title>Codecool Shop</title>
+    <title>Prello</title>
 
     <!-- Bootstrap components -->
     <!-- Latest compiled and minified Jquery -->
@@ -26,14 +26,13 @@
     <!-- End of Bootstrap components -->
 
     <link rel="stylesheet" type="text/css" href="/static/css/custom.css" />
+    <link rel="stylesheet" type="text/css" href="/static/css/payment-quick-style.css" />
     <script src="/static/js/payment.js" defer></script>
 </head>
 
 <body>
 
-<div class="jumbotron text-center">
-    <h1>Codecool Shop</h1>
-</div>
+<div th:replace="simple-header.html :: simple-header"></div>
 
 <div class="payment-page-container">
     <p id="total-price" th:text="'Total price: ' + ${totalPrice} + ' USD'" th:attr="data-total-price=${totalPrice}">Total price here</p>

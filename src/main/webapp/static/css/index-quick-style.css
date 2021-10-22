@@ -1,0 +1,14 @@
+@media (min-width: 768px) {
+    .container {
+        margin-top: -3rem;
+        margin-bottom: 2rem;
+    }
+}
+
+#filter-modal-button {
+    margin-bottom: 1rem;
+}
+
+.filter-form {
+    margin-bottom: 1rem;
+}
