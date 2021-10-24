@@ -79,7 +79,7 @@ async function modal() {
 
         let productDecrease = document.createElement("td");
         let productDecreaseButton = document.createElement("a");
-        productDecreaseButton.id = product.id;
+        productDecreaseButton.id = "decrease-cart-" + product.id;
         productDecreaseButton.dataset.id = product.id;
         productDecreaseButton.className = "decrease-cart";
         productDecreaseButton.href = "#";
@@ -94,7 +94,8 @@ async function modal() {
 
         let productIncrease = document.createElement("td");
         let productIncreaseButton = document.createElement("a");
-        productIncreaseButton.id = product.id;
+        productIncreaseButton.id = "increase-cart-" + product.id;
+        //
         productIncreaseButton.dataset.id = product.id;
         productIncreaseButton.className = "increase-cart";
         productIncreaseButton.href = "#";
