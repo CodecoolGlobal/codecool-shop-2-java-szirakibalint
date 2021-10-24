@@ -8,7 +8,7 @@ import org.testng.annotations.*;
 
 import java.util.List;
 
-public class TestChromeBrowser {
+public class TestChromeCart {
 
     public WebDriver driver;
 
@@ -29,24 +29,16 @@ public class TestChromeBrowser {
     @Test
     public void testPageTitleInBrowser() {
         String strPageTitle = driver.getTitle();
-        System.out.println("Page title: - "+strPageTitle);
         Assert.assertTrue(strPageTitle.equalsIgnoreCase("Prello"), "Page title doesn't match");
     }
 
     @Test
     public void addEveryElementToTheBasket_CartTableRowsMatch() throws InterruptedException {
-        List<WebElement> addToCartButtons = driver.findElements(By.linkText("Add to cart"));
-        for (WebElement addToCartButton : addToCartButtons) {
-            for (int i = 0; i < 2; i++) {
-                addToCartButton.click();
-                sleep();
-                driver.switchTo().alert().accept();
-            }
-        }
+        int addToCartButtonNumber = fillTheCart();
         driver.findElement(By.linkText("My Cart")).click();
         sleep();
         List<WebElement> tableRows = driver.findElements(By.cssSelector("[class='table table-image'] tr"));
-        Assert.assertEquals(addToCartButtons.size(), tableRows.size());
+        Assert.assertEquals(addToCartButtonNumber, tableRows.size());
     }
 
     @Test
@@ -128,7 +120,7 @@ public class TestChromeBrowser {
     }
 
     @Test
-    public void ChangeFilter_NoExceptionsThrown() throws InterruptedException {
+    public void changeFilter_NoExceptionsThrown() throws InterruptedException {
         sleep();
         driver.findElement(By.id("filter-modal-button")).click();
         sleep();
@@ -159,7 +151,7 @@ public class TestChromeBrowser {
         Thread.sleep(500);
     }
 
-    private void fillTheCart() throws InterruptedException {
+    private int fillTheCart() throws InterruptedException {
         driver.navigate().to("http://localhost:8080/");
         List<WebElement> addToCartButtons = driver.findElements(By.linkText("Add to cart"));
         for (WebElement addToCartButton : addToCartButtons) {
@@ -169,6 +161,7 @@ public class TestChromeBrowser {
                 driver.switchTo().alert().accept();
             }
         }
+        return addToCartButtons.size();
     }
 
 }
