@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<div th:fragment="header">
+  <div class="navbar navbar-expand-lg bg-indigo bg-lighten-xl">
+    <a class="navbar-brand" href="/">
+      <img src="/static/webimage/prello-logo.png" width="21%" class="d-inline-block align-top" alt="">
+    </a>
+    <a id="open-modal" data-toggle="modal" data-target=".bd-example-modal-lg" href="#">
+
+      <img src="/static/webimage/cartIcon.png" width="25px" alt="">
+      My Cart
+    </a>
+    <button id="go-to-checkout" class="btn btn-light check-out">Go to checkout</button>
+  </div>
+</div>
+
+</body>
+</html>
