@@ -64,11 +64,11 @@ public class SupplierDaoJDBC implements SupplierDao{
             if (resultSet.next()) {
                 Supplier supplier = new Supplier(resultSet.getString("supplier_name"), resultSet.getString("supplier_description"));
                 supplier.setId(resultSet.getInt("supplier_id"));
-                Product product = createProductFromResultSet(resultSet);
-                supplier.addProduct(product);
+                Product product = Product.createProductFromResultSet(resultSet);
+                product.setSupplier(supplier);
                 while(resultSet.next()) {
-                    product = createProductFromResultSet(resultSet);
-                    supplier.addProduct(product);
+                    product = Product.createProductFromResultSet(resultSet);
+                    product.setSupplier(supplier);
                 }
                 return supplier;
             }
@@ -123,10 +123,8 @@ public class SupplierDaoJDBC implements SupplierDao{
                     actualSupplier.setId(resultSet.getInt("supplier_id"));
                     actualSupplierId = actualSupplier.getId();
                 }
-                Product product = createProductFromResultSet(resultSet);
-                if (actualSupplier != null) {
-                    actualSupplier.addProduct(product);
-                }
+                Product product = Product.createProductFromResultSet(resultSet);
+                product.setSupplier(actualSupplier);
             }
             suppliers.add(actualSupplier);
             return suppliers;
@@ -134,22 +132,5 @@ public class SupplierDaoJDBC implements SupplierDao{
             System.out.println("Error while getting supplier list");
             return null;
         }
-    }
-
-    private Product createProductFromResultSet(ResultSet resultSet) throws SQLException {
-        Supplier supplier = new Supplier(resultSet.getString("name"), resultSet.getString("description"));
-        supplier.setId(resultSet.getInt("id"));
-        ProductCategory category = new ProductCategory(resultSet.getString("category_name"),
-                resultSet.getString("category_department"),
-                resultSet.getString("category_description"));
-        category.setId(resultSet.getInt("category_id"));
-        Product product = new Product(resultSet.getString("product_name"),
-                resultSet.getBigDecimal("product_price"),
-                resultSet.getString("product_currency"),
-                resultSet.getString("product_description"),
-                category,
-                supplier);
-        product.setId(resultSet.getInt("product_id"));
-        return product;
     }
 }
