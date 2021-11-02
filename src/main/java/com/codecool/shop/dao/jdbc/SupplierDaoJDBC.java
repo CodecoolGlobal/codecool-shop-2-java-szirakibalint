@@ -5,6 +5,7 @@ import com.codecool.shop.model.Supplier;
 
 import javax.sql.DataSource;
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class SupplierDaoJDBC implements SupplierDao{
@@ -32,14 +33,14 @@ public class SupplierDaoJDBC implements SupplierDao{
             statement.setString(2, supplier.getDescription());
             statement.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            System.out.println("Error while adding supplier");
         }
     }
 
     @Override
     public Supplier find(int id) {
         try (Connection conn = dataSource.getConnection()) {
-            String sql = "SELECT id, name, description FROM supplier WHERE id = ?";
+            String sql = "SELECT * FROM supplier WHERE id = ?";
             PreparedStatement statement = conn.prepareStatement(sql);
             statement.setInt(1, id);
             ResultSet resultSet = statement.executeQuery();
@@ -48,19 +49,40 @@ public class SupplierDaoJDBC implements SupplierDao{
                 supplier.setId(resultSet.getInt("id"));
                 return supplier;
             }
-            return null;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            System.out.println("Error while finding supplier");
         }
+        return null;
     }
 
     @Override
     public void remove(int id) {
-
+        try (Connection conn = dataSource.getConnection()) {
+            String sql = "DELETE FROM supplier WHERE id = ?";
+            PreparedStatement statement = conn.prepareStatement(sql);
+            statement.setInt(1, id);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Error while deleting supplier");
+        }
     }
 
     @Override
     public List<Supplier> getAll() {
-        return null;
+        try (Connection conn = dataSource.getConnection()) {
+            String sql = "SELECT * FROM supplier";
+            PreparedStatement statement = conn.prepareStatement(sql);
+            ResultSet resultSet = statement.executeQuery();
+            List<Supplier> suppliers = new ArrayList<>();
+            while (resultSet.next()) {
+                Supplier supplier = new Supplier(resultSet.getString("name"), resultSet.getString("description"));
+                supplier.setId(resultSet.getInt("id"));
+                suppliers.add(supplier);
+            }
+            return suppliers;
+        } catch (SQLException e) {
+            System.out.println("Error while finding supplier");
+            return null;
+        }
     }
 }
