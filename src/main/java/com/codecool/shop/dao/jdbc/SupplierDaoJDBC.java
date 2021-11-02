@@ -81,7 +81,7 @@ public class SupplierDaoJDBC implements SupplierDao{
             }
             return suppliers;
         } catch (SQLException e) {
-            System.out.println("Error while finding supplier");
+            System.out.println("Error while getting supplier list");
             return null;
         }
     }
