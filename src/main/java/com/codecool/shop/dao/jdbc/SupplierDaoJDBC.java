@@ -150,5 +150,6 @@ public class SupplierDaoJDBC implements SupplierDao{
                 category,
                 supplier);
         product.setId(resultSet.getInt("product_id"));
+        return product;
     }
 }
