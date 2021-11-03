@@ -59,6 +59,7 @@ public class ValidOrder extends Order {
         return new HashMap<>(){{
            put("valid", "true");
            put("cart_id", String.valueOf(cartId));
+           put("cart_data", cart.toString());
            put("first_name", firstName);
            put("last_name", lastName);
            put("country", country);

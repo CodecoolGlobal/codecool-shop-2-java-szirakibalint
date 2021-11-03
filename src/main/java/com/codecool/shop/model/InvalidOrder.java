@@ -34,6 +34,7 @@ public class InvalidOrder extends Order {
         return new HashMap<>(){{
             put("valid", "false");
             put("cart_id", String.valueOf(cartId));
+            put("cart_data", cart.toString());
             put("message", errorMessage);
         }};
     }

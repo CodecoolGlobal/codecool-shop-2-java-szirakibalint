@@ -71,6 +71,7 @@ CREATE TABLE public.invalid_order (
 CREATE TABLE public.order (
     id INT UNIQUE PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     valid BOOLEAN NOT NULL,
+    cart_data VARCHAR NOT NULL,
     cart_id INTEGER NOT NULL,
     valid_id INTEGER,
     invalid_id INTEGER,
