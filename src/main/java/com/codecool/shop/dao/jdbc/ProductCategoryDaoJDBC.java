@@ -80,7 +80,7 @@ public class ProductCategoryDaoJDBC implements ProductCategoryDao{
                 return category;
             }
         } catch (SQLException e) {
-            System.out.println("Error while finding product category");
+            logger.error("Error while finding product category with id = '{}'", id);
         }
         return null;
     }
