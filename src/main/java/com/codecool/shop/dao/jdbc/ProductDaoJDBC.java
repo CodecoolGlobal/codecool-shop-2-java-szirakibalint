@@ -28,6 +28,10 @@ public class ProductDaoJDBC implements ProductDao {
         return instance;
     }
 
+    public static ProductDao getInstance() {
+        return instance;
+    }
+
     @Override
     public void add(Product product) {
         try (Connection conn = dataSource.getConnection()) {
@@ -51,7 +55,7 @@ public class ProductDaoJDBC implements ProductDao {
             String sql = "SELECT supplier.id AS supplier_id, " +
                     "supplier.name AS supplier_name, " +
                     "supplier.description AS supplier_description, " +
-                    "product.id AS porduct_id, " +
+                    "product.id AS product_id, " +
                     "product.name AS product_name, " +
                     "product.default_price AS product_price, " +
                     "product.currency AS product_currency, " +
@@ -94,7 +98,7 @@ public class ProductDaoJDBC implements ProductDao {
             String sql = "SELECT supplier.id AS supplier_id, " +
                     "supplier.name AS supplier_name, " +
                     "supplier.description AS supplier_description, " +
-                    "product.id AS porduct_id, " +
+                    "product.id AS product_id, " +
                     "product.name AS product_name, " +
                     "product.default_price AS product_price, " +
                     "product.currency AS product_currency, " +
@@ -127,7 +131,7 @@ public class ProductDaoJDBC implements ProductDao {
             String sql = "SELECT supplier.id AS supplier_id, " +
                     "supplier.name AS supplier_name, " +
                     "supplier.description AS supplier_description, " +
-                    "product.id AS porduct_id, " +
+                    "product.id AS product_id, " +
                     "product.name AS product_name, " +
                     "product.default_price AS product_price, " +
                     "product.currency AS product_currency, " +
@@ -157,7 +161,7 @@ public class ProductDaoJDBC implements ProductDao {
             String sql = "SELECT supplier.id AS supplier_id, " +
                     "supplier.name AS supplier_name, " +
                     "supplier.description AS supplier_description, " +
-                    "product.id AS porduct_id, " +
+                    "product.id AS product_id, " +
                     "product.name AS product_name, " +
                     "product.default_price AS product_price, " +
                     "product.currency AS product_currency, " +
@@ -166,9 +170,9 @@ public class ProductDaoJDBC implements ProductDao {
                     "category.name AS category_name, " +
                     "category.department AS category_department, " +
                     "category.description AS category_description " +
-                    "FROM supplier " +
-                    "LEFT JOIN product ON supplier.id = product.supplier_id " +
-                    "LEFT JOIN category ON category.id = product.category_id " +
+                    "FROM category " +
+                    "LEFT JOIN product ON category.id = product.category_id " +
+                    "LEFT JOIN supplier ON product.supplier_id = supplier.id " +
                     "WHERE category.id = ?" +
                     "ORDER BY product.id";
             PreparedStatement statement = conn.prepareStatement(sql);

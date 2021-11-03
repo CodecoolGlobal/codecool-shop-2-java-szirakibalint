@@ -29,6 +29,10 @@ public class ProductCategoryDaoJDBC implements ProductCategoryDao{
         return instance;
     }
 
+    public static ProductCategoryDao getInstance() {
+        return instance;
+    }
+
     @Override
     public void add(ProductCategory category) {
         try (Connection conn = dataSource.getConnection()) {
@@ -49,7 +53,7 @@ public class ProductCategoryDaoJDBC implements ProductCategoryDao{
             String sql = "SELECT supplier.id AS supplier_id, " +
                     "supplier.name AS supplier_name, " +
                     "supplier.description AS supplier_description, " +
-                    "product.id AS porduct_id, " +
+                    "product.id AS product_id, " +
                     "product.name AS product_name, " +
                     "product.default_price AS product_price, " +
                     "product.currency AS product_currency, " +
@@ -102,7 +106,7 @@ public class ProductCategoryDaoJDBC implements ProductCategoryDao{
             String sql = "SELECT supplier.id AS supplier_id, " +
                     "supplier.name AS supplier_name, " +
                     "supplier.description AS supplier_description, " +
-                    "product.id AS porduct_id, " +
+                    "product.id AS product_id, " +
                     "product.name AS product_name, " +
                     "product.default_price AS product_price, " +
                     "product.currency AS product_currency, " +
