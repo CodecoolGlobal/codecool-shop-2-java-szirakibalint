@@ -1,5 +1,6 @@
 package com.codecool.shop.dao.jdbc;
 
+import com.codecool.shop.dao.ProductCategoryDao;
 import com.codecool.shop.dao.SupplierDao;
 import com.codecool.shop.model.Product;
 import com.codecool.shop.model.ProductCategory;
@@ -10,37 +11,38 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SupplierDaoJDBC implements SupplierDao{
+public class ProductCategoryDaoJDBC implements ProductCategoryDao{
 
     private final DataSource dataSource;
-    private static SupplierDao instance;
+    private static ProductCategoryDao instance;
 
-    private SupplierDaoJDBC(DataSource dataSource) {
+    private ProductCategoryDaoJDBC(DataSource dataSource) {
         this.dataSource = dataSource;
     }
 
-    public static SupplierDao getInstance(DataSource dataSource) {
+    public static ProductCategoryDao getInstance(DataSource dataSource) {
         if (instance == null) {
-            instance = new SupplierDaoJDBC(dataSource);
+            instance = new ProductCategoryDaoJDBC(dataSource);
         }
         return instance;
     }
 
     @Override
-    public void add(Supplier supplier) {
+    public void add(ProductCategory category) {
         try (Connection conn = dataSource.getConnection()) {
-            String sql = "INSERT INTO supplier (name, description) VALUES (?, ?)";
+            String sql = "INSERT INTO category (name, department, description) VALUES (?, ?, ?)";
             PreparedStatement statement = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            statement.setString(1, supplier.getName());
-            statement.setString(2, supplier.getDescription());
+            statement.setString(1, category.getName());
+            statement.setString(2, category.getDepartment());
+            statement.setString(3, category.getDescription());
             statement.executeUpdate();
         } catch (SQLException e) {
-            System.out.println("Error while adding supplier");
+            System.out.println("Error while adding product category");
         }
     }
 
     @Override
-    public Supplier find(int id) {
+    public ProductCategory find(int id) {
         try (Connection conn = dataSource.getConnection()) {
             String sql = "SELECT supplier.id AS supplier_id, " +
                     "supplier.name AS supplier_name, " +
@@ -57,23 +59,25 @@ public class SupplierDaoJDBC implements SupplierDao{
                     "FROM supplier " +
                     "LEFT JOIN product ON supplier.id = product.supplier_id " +
                     "LEFT JOIN category ON category.id = product.category_id " +
-                    "WHERE supplier.id = ?";
+                    "WHERE category.id = ?";
             PreparedStatement statement = conn.prepareStatement(sql);
             statement.setInt(1, id);
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
-                Supplier supplier = new Supplier(resultSet.getString("supplier_name"), resultSet.getString("supplier_description"));
-                supplier.setId(resultSet.getInt("supplier_id"));
+                ProductCategory category = new ProductCategory(resultSet.getString("category_name"),
+                        resultSet.getString("category_department"),
+                        resultSet.getString("category_description"));
+                category.setId(resultSet.getInt("category_id"));
                 Product product = Product.createProductFromResultSet(resultSet);
-                product.setSupplier(supplier);
+                product.setProductCategory(category);
                 while(resultSet.next()) {
                     product = Product.createProductFromResultSet(resultSet);
-                    product.setSupplier(supplier);
+                    product.setProductCategory(category);
                 }
-                return supplier;
+                return category;
             }
         } catch (SQLException e) {
-            System.out.println("Error while finding supplier");
+            System.out.println("Error while finding product category");
         }
         return null;
     }
@@ -81,17 +85,17 @@ public class SupplierDaoJDBC implements SupplierDao{
     @Override
     public void remove(int id) {
         try (Connection conn = dataSource.getConnection()) {
-            String sql = "DELETE FROM supplier WHERE id = ?";
+            String sql = "DELETE FROM category WHERE id = ?";
             PreparedStatement statement = conn.prepareStatement(sql);
             statement.setInt(1, id);
             statement.executeUpdate();
         } catch (SQLException e) {
-            System.out.println("Error while deleting supplier");
+            System.out.println("Error while deleting category");
         }
     }
 
     @Override
-    public List<Supplier> getAll() {
+    public List<ProductCategory> getAll() {
         try (Connection conn = dataSource.getConnection()) {
             String sql = "SELECT supplier.id AS supplier_id, " +
                     "supplier.name AS supplier_name, " +
@@ -108,28 +112,30 @@ public class SupplierDaoJDBC implements SupplierDao{
                     "FROM supplier " +
                     "LEFT JOIN product ON supplier.id = product.supplier_id " +
                     "LEFT JOIN category ON category.id = product.category_id " +
-                    "ORDER BY supplier.id";
+                    "ORDER BY category.id";
             PreparedStatement statement = conn.prepareStatement(sql);
             ResultSet resultSet = statement.executeQuery();
-            List<Supplier> suppliers = new ArrayList<>();
-            int actualSupplierId = -1;
-            Supplier actualSupplier = null;
+            List<ProductCategory> categories = new ArrayList<>();
+            int actualCategoryId = -1;
+            ProductCategory actualCategory = null;
             while (resultSet.next()) {
-                if (resultSet.getInt("supplier_id") != actualSupplierId) {
-                    if (actualSupplier != null) {
-                        suppliers.add(actualSupplier);
+                if (resultSet.getInt("category_id") != actualCategoryId) {
+                    if (actualCategory != null) {
+                        categories.add(actualCategory);
                     }
-                    actualSupplier = new Supplier(resultSet.getString("supplier_name"), resultSet.getString("supplier_description"));
-                    actualSupplier.setId(resultSet.getInt("supplier_id"));
-                    actualSupplierId = actualSupplier.getId();
+                    actualCategory = new ProductCategory(resultSet.getString("category_name"),
+                            resultSet.getString("category_department"),
+                            resultSet.getString("category_description"));
+                    actualCategory.setId(resultSet.getInt("category_id"));
+                    actualCategoryId = actualCategory.getId();
                 }
                 Product product = Product.createProductFromResultSet(resultSet);
-                product.setSupplier(actualSupplier);
+                product.setProductCategory(actualCategory);
             }
-            suppliers.add(actualSupplier);
-            return suppliers;
+            categories.add(actualCategory);
+            return categories;
         } catch (SQLException e) {
-            System.out.println("Error while getting supplier list");
+            System.out.println("Error while getting product category list");
             return null;
         }
     }
