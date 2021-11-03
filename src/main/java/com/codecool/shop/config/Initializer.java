@@ -29,9 +29,9 @@ public class Initializer implements ServletContextListener {
             CartDaoJDBC.getInstance(dataBaseManager.getConnectionData());
             OrderDaoJDBC.getInstance(dataBaseManager.getConnectionData());
         } else if (System.getenv("config").equals("memory")) {
-            ProductDao productDataStore = ProductDaoJDBC.getInstance();
-            ProductCategoryDao productCategoryDataStore = ProductCategoryDaoJDBC.getInstance();
-            SupplierDao supplierDataStore = SupplierDaoJDBC.getInstance();
+            ProductDao productDataStore = ProductDaoMem.getInstance();
+            ProductCategoryDao productCategoryDataStore = ProductCategoryDaoMem.getInstance();
+            SupplierDao supplierDataStore = SupplierDaoMem.getInstance();
 
             Supplier mojang = new Supplier("Mojang Studios", "Swedish video game company.");
             supplierDataStore.add(mojang);
