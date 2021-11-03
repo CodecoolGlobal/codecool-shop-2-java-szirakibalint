@@ -44,7 +44,7 @@ public class ProductDaoJDBC implements ProductDao {
             statement.setInt(6, product.getSupplier().getId());
             statement.executeUpdate();
         } catch (SQLException e) {
-            System.out.println("Error while adding product");
+            logger.error("Error while adding product: '{}'", product.toString());
         }
     }
 
