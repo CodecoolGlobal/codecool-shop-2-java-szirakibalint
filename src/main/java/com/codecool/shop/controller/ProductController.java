@@ -47,6 +47,7 @@ public class ProductController extends HttpServlet {
             try {
                 categoryId = Integer.parseInt(categoryIdString);
             } catch (NumberFormatException e) {
+                logger.info("Error while parsing '{}' as category_id", categoryIdString);
                 resp.sendRedirect("/");
             }
             ProductCategory category = productService.getProductCategory(categoryId);
