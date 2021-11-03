@@ -2,24 +2,26 @@ DROP TABLE IF EXISTS public.product CASCADE;
 DROP TABLE IF EXISTS public.category CASCADE;
 DROP TABLE IF EXISTS public.supplier CASCADE;
 DROP TABLE IF EXISTS public.order CASCADE;
+DROP TABLE IF EXISTS public.valid_order CASCADE;
+DROP TABLE IF EXISTS public.invalid_order CASCADE;
 DROP TABLE IF EXISTS public.cart CASCADE;
 DROP TABLE IF EXISTS public.cart_product CASCADE;
 
 CREATE TABLE public.category (
-    id INT UNIQUE PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    id INTEGER UNIQUE PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     name VARCHAR NOT NULL,
     department VARCHAR NOT NULL,
     description VARCHAR NOT NULL
 );
 
 CREATE TABLE public.supplier (
-    id INT UNIQUE PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    id INTEGER UNIQUE PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     name VARCHAR NOT NULL,
     description VARCHAR NOT NULL
 );
 
 CREATE TABLE public.product (
-    id INT UNIQUE PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    id INTEGER UNIQUE PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     name VARCHAR NOT NULL,
     default_price DECIMAL(20, 2) NOT NULL,
     currency VARCHAR(3) NOT NULL,
@@ -40,7 +42,7 @@ CREATE TABLE public.cart (
 );
 
 CREATE TABLE public.cart_product (
-    id INT UNIQUE PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    id INTEGER UNIQUE PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     cart_id INTEGER NOT NULL,
     product_id INTEGER NOT NULL,
     CONSTRAINT fk_cart
@@ -51,17 +53,36 @@ CREATE TABLE public.cart_product (
             REFERENCES product (id)
 );
 
+CREATE TABLE public.valid_order (
+    id INTEGER UNIQUE PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    first_name VARCHAR,
+    last_name VARCHAR,
+    country VARCHAR,
+    city VARCHAR,
+    address VARCHAR,
+    user_id INTEGER
+);
+
+CREATE TABLE public.invalid_order (
+    id INT UNIQUE PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    message VARCHAR
+);
+
 CREATE TABLE public.order (
     id INT UNIQUE PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-    user_id INTEGER,
-    name VARCHAR,
     valid BOOLEAN NOT NULL,
-    address VARCHAR,
-    message VARCHAR,
     cart_id INTEGER NOT NULL,
+    valid_id INTEGER,
+    invalid_id INTEGER,
     CONSTRAINT fk_cart
         FOREIGN KEY (cart_id)
-            REFERENCES cart (id)
+            REFERENCES cart (id),
+    CONSTRAINT fk_valid_order
+        FOREIGN KEY (valid_id)
+            REFERENCES valid_order (id),
+    CONSTRAINT fk_invalid_order
+        FOREIGN KEY (invalid_id)
+            REFERENCES invalid_order (id)
 );
 
 INSERT INTO supplier (name, description)
