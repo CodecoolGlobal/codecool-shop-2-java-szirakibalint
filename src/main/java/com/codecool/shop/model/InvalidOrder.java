@@ -10,8 +10,8 @@ public class InvalidOrder extends Order {
 
     private final String errorMessage;
 
-    public InvalidOrder(String errorMessage, Cart cart) {
-        super(cart);
+    public InvalidOrder(String errorMessage, int cartId, String cart) {
+        super(cart, cartId);
         this.errorMessage = errorMessage;
     }
 
@@ -22,7 +22,7 @@ public class InvalidOrder extends Order {
                 put("status", "failed");
                 put("id", id);
                 put("error_message", errorMessage);
-                put("cart", cart.createJsonFromCart());
+                put("cart", cart);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -33,7 +33,7 @@ public class InvalidOrder extends Order {
     public HashMap<String, String> getRelevantInformation() {
         return new HashMap<>(){{
             put("valid", "false");
-            put("cart_id", String.valueOf(cart.getId()));
+            put("cart_id", String.valueOf(cartId));
             put("message", errorMessage);
         }};
     }

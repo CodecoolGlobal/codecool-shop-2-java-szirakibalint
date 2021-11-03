@@ -14,25 +14,15 @@ public class ValidOrder extends Order {
     private final String city;
     private final String address;
     private final int userId;
-    private final Map<Product, Integer> products;
 
-    public ValidOrder(String firstName, String lastName, String country, String city, String address, int userId, Cart cart) {
-        super(cart);
+    public ValidOrder(String firstName, String lastName, String country, String city, String address, int userId, int cartId, String cart) {
+        super(cart, cartId);
         this.firstName = firstName;
         this.lastName = lastName;
         this.country = country;
         this.city = city;
         this.address = address;
         this.userId = userId;
-        this.products = cart.getProducts();
-    }
-
-    public Cart getCart() {
-        return cart;
-    }
-
-    public Map<Product, Integer> getProducts() {
-        return products;
     }
 
     @Override
@@ -41,7 +31,7 @@ public class ValidOrder extends Order {
                 " " + firstName +
                 " " + lastName +
                 " " + address +
-                " " + products.toString();
+                " " + cart.toString();
     }
 
     @Override
@@ -57,7 +47,7 @@ public class ValidOrder extends Order {
                     put("city", city);
                     put("address", address);
                 }});
-                put("cart", cart.createJsonFromCart());
+                put("cart", cart);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -68,7 +58,7 @@ public class ValidOrder extends Order {
     public HashMap<String, String> getRelevantInformation() {
         return new HashMap<>(){{
            put("valid", "true");
-           put("cart_id", String.valueOf(cart.getId()));
+           put("cart_id", String.valueOf(cartId));
            put("first_name", firstName);
            put("last_name", lastName);
            put("country", country);

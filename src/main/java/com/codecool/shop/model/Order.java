@@ -1,5 +1,6 @@
 package com.codecool.shop.model;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import javax.management.remote.JMXServerErrorException;
@@ -12,13 +13,19 @@ public abstract class Order extends BaseModel{
 
     protected final LocalDateTime orderedAt;
     private boolean paidFor = false;
-    protected final Cart cart;
+    protected JSONObject cart = null;
+    protected final int cartId;
 
-    public Order(Cart cart) {
+    public Order(String cart, int cartId) {
         this.id = idCounter;
         idCounter++;
         this.orderedAt = LocalDateTime.now();
-        this.cart = cart;
+        try {
+            this.cart = new JSONObject(cart);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        this.cartId = cartId;
     }
 
     public int getId() {
