@@ -59,6 +59,7 @@ public class CheckoutController extends HttpServlet {
         if (orderId != null) {
             resp.sendRedirect(String.format("/payment?order_id=%s", orderId));
         } else {
+            logger.warn("Order id is null!");
             resp.sendRedirect("/checkout");
         }
     }
