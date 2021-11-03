@@ -1,5 +1,6 @@
 package com.codecool.shop.controller;
 
+import com.codecool.shop.config.DataBaseManager;
 import com.codecool.shop.config.TemplateEngineUtil;
 import com.codecool.shop.dao.CartDao;
 import com.codecool.shop.dao.OrderDao;
@@ -39,9 +40,10 @@ public class CheckoutController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 
-        CartDao cartDao = CartDaoMem.getInstance();
-        OrderDao orderDao = OrderDaoMem.getInstance();
-        ProductDao productDao = ProductDaoMem.getInstance();
+        DataBaseManager dataBaseManager = DataBaseManager.getInstance();
+        CartDao cartDao = dataBaseManager.getCurrentCartDao();
+        OrderDao orderDao = dataBaseManager.getCurrentOrderDao();
+        ProductDao productDao = dataBaseManager.getCurrentProductDao();
         OrderService orderService = new OrderService(cartDao, orderDao, productDao);
 
         Enumeration<String> parameterNames = req.getParameterNames();

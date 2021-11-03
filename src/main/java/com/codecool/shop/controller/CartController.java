@@ -1,5 +1,6 @@
 package com.codecool.shop.controller;
 
+import com.codecool.shop.config.DataBaseManager;
 import com.codecool.shop.dao.CartDao;
 import com.codecool.shop.dao.ProductDao;
 import com.codecool.shop.dao.implementation.CartDaoMem;
@@ -20,8 +21,9 @@ import org.json.JSONObject;
 @WebServlet(urlPatterns = {"/cart"})
 public class CartController extends HttpServlet {
 
-    CartDao cartDao = CartDaoMem.getInstance();
-    ProductDao productDataStore = ProductDaoMem.getInstance();
+    DataBaseManager dataBaseManager = DataBaseManager.getInstance();
+    CartDao cartDao = dataBaseManager.getCurrentCartDao();
+    ProductDao productDataStore = dataBaseManager.getCurrentProductDao();
     CartService cartService = new CartService(cartDao, productDataStore);
 
     @Override
