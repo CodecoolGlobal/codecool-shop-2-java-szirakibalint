@@ -1,12 +1,9 @@
 package com.codecool.shop.dao.jdbc;
 
 import com.codecool.shop.dao.CartDao;
-import com.codecool.shop.dao.ProductCategoryDao;
 import com.codecool.shop.mapper.CartMapper;
-import com.codecool.shop.mapper.ProductMapper;
 import com.codecool.shop.model.Cart;
 import com.codecool.shop.model.Product;
-import com.codecool.shop.model.ProductCategory;
 
 import javax.sql.DataSource;
 import java.math.BigDecimal;
@@ -16,7 +13,6 @@ public class CartDaoJDBC implements CartDao {
 
     private final DataSource dataSource;
     private static CartDao instance;
-    private final ProductMapper productMapper = new ProductMapper();
     private final CartMapper cartMapper = new CartMapper();
 
     private CartDaoJDBC(DataSource dataSource) {
