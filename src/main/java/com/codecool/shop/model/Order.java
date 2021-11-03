@@ -4,12 +4,12 @@ import org.json.JSONObject;
 
 import javax.management.remote.JMXServerErrorException;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.Map;
 
-public abstract class Order {
+public abstract class Order extends BaseModel{
     private static int idCounter = 0;
 
-    protected final int id;
     protected final LocalDateTime orderedAt;
     private boolean paidFor = false;
     protected final Cart cart;
@@ -38,4 +38,6 @@ public abstract class Order {
     }
 
     public abstract JSONObject toJson();
+
+    public abstract HashMap<String, String> getRelevantInformation();
 }

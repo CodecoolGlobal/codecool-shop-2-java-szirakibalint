@@ -4,6 +4,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 
 public class InvalidOrder extends Order {
 
@@ -25,6 +26,15 @@ public class InvalidOrder extends Order {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+        }};
+    }
+
+    @Override
+    public HashMap<String, String> getRelevantInformation() {
+        return new HashMap<>(){{
+            put("valid", "false");
+            put("cart_id", String.valueOf(cart.getId()));
+            put("message", errorMessage);
         }};
     }
 }

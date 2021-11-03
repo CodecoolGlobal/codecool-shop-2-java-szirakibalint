@@ -3,6 +3,7 @@ package com.codecool.shop.model;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class ValidOrder extends Order {
@@ -60,6 +61,20 @@ public class ValidOrder extends Order {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+        }};
+    }
+
+    @Override
+    public HashMap<String, String> getRelevantInformation() {
+        return new HashMap<>(){{
+           put("valid", "true");
+           put("cart_id", String.valueOf(cart.getId()));
+           put("first_name", firstName);
+           put("last_name", lastName);
+           put("country", country);
+           put("city", city);
+           put("address", address);
+           put("user_id", String.valueOf(userId));
         }};
     }
 }
