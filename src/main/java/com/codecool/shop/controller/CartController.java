@@ -16,9 +16,12 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @WebServlet(urlPatterns = {"/cart"})
 public class CartController extends HttpServlet {
+    private static final Logger logger = LoggerFactory.getLogger(ProductController.class);
 
     CartDao cartDao = CartDaoMem.getInstance();
     ProductDao productDataStore = ProductDaoMem.getInstance();
