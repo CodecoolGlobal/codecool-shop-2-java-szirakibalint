@@ -21,7 +21,7 @@ import org.slf4j.LoggerFactory;
 
 @WebServlet(urlPatterns = {"/cart"})
 public class CartController extends HttpServlet {
-    private static final Logger logger = LoggerFactory.getLogger(ProductController.class);
+    private static final Logger logger = LoggerFactory.getLogger(CartController.class);
 
     CartDao cartDao = CartDaoMem.getInstance();
     ProductDao productDataStore = ProductDaoMem.getInstance();
