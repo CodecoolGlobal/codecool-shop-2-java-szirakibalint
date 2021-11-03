@@ -77,7 +77,7 @@ public class SupplierDaoJDBC implements SupplierDao{
                 return supplier;
             }
         } catch (SQLException e) {
-            System.out.println("Error while finding supplier");
+            logger.error("Error while finding supplier with id = '{}'", id);
         }
         return null;
     }
