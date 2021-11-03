@@ -122,7 +122,7 @@ public class Cart extends BaseModel{
                     put("supplier", product.getSupplier().getName());
                     put("quantity", products.get(product));
                 } catch (JSONException e) {
-                    e.printStackTrace();
+                    logger.error("Error while creating JSON from cart content");
                 }
             }};
             cartJson.add(newJson);
