@@ -24,23 +24,19 @@ public class CartService {
     }
 
     public void handlePost(String productId, String cartIdString) {
-        try {
-            int cartId = (cartIdString == null)
-                    ? DEFAULT_CART_ID
-                    : cartDao.getCartByUserId(Integer.parseInt(cartIdString)).getId();
-            if (productId == null) {
-                return;
-            }
-            Product product = productDao.find(Integer.parseInt(productId));
-            cartDao.addToCart(cartId, product);
-        } catch (NullPointerException npe) {
-            npe.printStackTrace();
+        int cartId = (cartIdString == null)
+                ? DEFAULT_CART_ID
+                : Integer.parseInt(cartIdString);
+        if (productId == null) {
+            return;
         }
+        Product product = productDao.find(Integer.parseInt(productId));
+        cartDao.addToCart(cartId, product);
     }
 
     public JSONObject handleGet(String cartIdString, String productId) {
         Cart cart = (cartIdString != null)
-                ? cartDao.getCartByUserId(Integer.parseInt(cartIdString))
+                ? cartDao.getCartById(Integer.parseInt(cartIdString))
                 : cartDao.getCartById(DEFAULT_CART_ID);
         if (productId == null) {
             if (cart != null) {
