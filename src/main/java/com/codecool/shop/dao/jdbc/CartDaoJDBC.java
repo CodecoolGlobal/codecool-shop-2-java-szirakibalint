@@ -180,7 +180,7 @@ public class CartDaoJDBC implements CartDao {
             statement.setInt(1, cartId);
             statement.executeUpdate();
         } catch (SQLException e) {
-            System.out.println("Error while removing all products from cart");
+            logger.error("Error while removing all products from cart with cart_id = '{}'", cartId);
         }
     }
 
