@@ -105,7 +105,7 @@ public class Cart extends BaseModel{
                 put("products", products);
                 put("total_price", String.valueOf(totalSum));
             } catch (JSONException e) {
-                e.printStackTrace();
+                logger.error("Error while creating JSON from Cart");
             }
         }};
     }
