@@ -30,7 +30,7 @@ public class DataBaseManager {
         try {
             dataSource.getConnection().close();
         } catch (SQLException sqle) {
-            sqle.printStackTrace();
+            logger.error("Error while getting connection data");
         }
         return dataSource;
     }
