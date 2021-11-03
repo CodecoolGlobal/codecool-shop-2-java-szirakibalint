@@ -4,12 +4,15 @@ import com.codecool.shop.dao.CartDao;
 import com.codecool.shop.mapper.CartMapper;
 import com.codecool.shop.model.Cart;
 import com.codecool.shop.model.Product;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.sql.DataSource;
 import java.math.BigDecimal;
 import java.sql.*;
 
 public class CartDaoJDBC implements CartDao {
+    private static final Logger logger = LoggerFactory.getLogger(CartDaoJDBC.class);
 
     private final DataSource dataSource;
     private static CartDao instance;
