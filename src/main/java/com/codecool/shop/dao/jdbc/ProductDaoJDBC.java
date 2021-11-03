@@ -74,7 +74,7 @@ public class ProductDaoJDBC implements ProductDao {
                 return productMapper.createProductFromResultSet(resultSet);
             }
         } catch (SQLException e) {
-            System.out.println("Error while finding product");
+            logger.error("Error while finding product with id = '{}'", id);
         }
         return null;
     }
