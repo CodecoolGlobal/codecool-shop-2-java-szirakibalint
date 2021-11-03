@@ -168,7 +168,7 @@ public class CartDaoJDBC implements CartDao {
             statement.setInt(2, product.getId());
             statement.executeUpdate();
         } catch (SQLException e) {
-            System.out.println("Error while removing product from cart");
+            logger.error("Error while removing '{}' from cart with cart_id = '{}'", product, cartId);
         }
     }
 
