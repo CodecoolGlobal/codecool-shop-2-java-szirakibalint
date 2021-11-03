@@ -138,7 +138,7 @@ public class ProductCategoryDaoJDBC implements ProductCategoryDao{
             categories.add(actualCategory);
             return categories;
         } catch (SQLException e) {
-            System.out.println("Error while getting product category list");
+            logger.error("Error while getting product category list");
             return null;
         }
     }
