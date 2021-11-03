@@ -19,12 +19,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @WebServlet(urlPatterns = {"/"})
 public class ProductController extends HttpServlet {
+    private static final Logger logger = LoggerFactory.getLogger(ProductController.class);
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -47,6 +47,7 @@ public class ProductController extends HttpServlet {
             try {
                 categoryId = Integer.parseInt(categoryIdString);
             } catch (NumberFormatException e) {
+                logger.info("Error while parsing '{}' as category_id", categoryIdString);
                 resp.sendRedirect("/");
             }
             ProductCategory category = productService.getProductCategory(categoryId);
@@ -66,6 +67,7 @@ public class ProductController extends HttpServlet {
             try {
                 supplierId = Integer.parseInt(supplierIdString);
             } catch (NumberFormatException e) {
+                logger.info("Error while parsing '{}' as supplier_id", supplierIdString);
                 resp.sendRedirect("/");
             }
             Supplier supplier = productService.getProductSupplier(supplierId);

@@ -2,10 +2,11 @@ package com.codecool.shop.model;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.time.LocalDateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class InvalidOrder extends Order {
+    private static final Logger logger = LoggerFactory.getLogger(InvalidOrder.class);
 
     private final String errorMessage;
 
@@ -23,7 +24,7 @@ public class InvalidOrder extends Order {
                 put("error_message", errorMessage);
                 put("cart", cart.createJsonFromCart());
             } catch (JSONException e) {
-                e.printStackTrace();
+                logger.error("Error while creating JSONObject");
             }
         }};
     }

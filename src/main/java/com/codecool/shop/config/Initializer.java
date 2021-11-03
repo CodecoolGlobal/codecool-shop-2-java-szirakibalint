@@ -61,4 +61,8 @@ public class Initializer implements ServletContextListener {
         productDataStore.add(new Product("Minecraft Dungeons", new BigDecimal("9.99"), "USD", "", adventure, mojang));
         productDataStore.add(new Product("Fifa 2004", new BigDecimal("9.99"), "USD", "Great music.", sandbox, ea));
     }
+
+    @Override
+    public void contextDestroyed(ServletContextEvent sce) {
+    }
 }

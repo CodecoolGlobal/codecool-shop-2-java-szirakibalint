@@ -5,6 +5,8 @@ import com.codecool.shop.mapper.ProductMapper;
 import com.codecool.shop.model.Product;
 import com.codecool.shop.model.ProductCategory;
 import com.codecool.shop.model.Supplier;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -12,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ProductDaoJDBC implements ProductDao {
+    private static final Logger logger = LoggerFactory.getLogger(ProductDaoJDBC.class);
 
     private final DataSource dataSource;
     private static ProductDao instance;
@@ -41,7 +44,7 @@ public class ProductDaoJDBC implements ProductDao {
             statement.setInt(6, product.getSupplier().getId());
             statement.executeUpdate();
         } catch (SQLException e) {
-            System.out.println("Error while adding product");
+            logger.error("Error while adding product: '{}'", product.toString());
         }
     }
 
@@ -71,7 +74,7 @@ public class ProductDaoJDBC implements ProductDao {
                 return productMapper.createProductFromResultSet(resultSet);
             }
         } catch (SQLException e) {
-            System.out.println("Error while finding product");
+            logger.error("Error while finding product with id = '{}'", id);
         }
         return null;
     }
@@ -84,7 +87,7 @@ public class ProductDaoJDBC implements ProductDao {
             statement.setInt(1, id);
             statement.executeUpdate();
         } catch (SQLException e) {
-            System.out.println("Error while deleting product");
+            logger.error("Error while deleting product with id = '{}'", id);
         }
     }
 
@@ -116,7 +119,7 @@ public class ProductDaoJDBC implements ProductDao {
             }
             return products;
         } catch (SQLException e) {
-            System.out.println("Error while getting product list");
+            logger.error("Error while getting product list");
             return null;
         }
     }
@@ -146,7 +149,7 @@ public class ProductDaoJDBC implements ProductDao {
             ResultSet resultSet = statement.executeQuery();
             return productMapper.createProductList(resultSet);
         } catch (SQLException e) {
-            System.out.println("Error while getting product list by supplier");
+            logger.error("Error while getting product list by supplier: '{}'", supplier.toString());
             return null;
         }
     }
@@ -176,7 +179,7 @@ public class ProductDaoJDBC implements ProductDao {
             ResultSet resultSet = statement.executeQuery();
             return productMapper.createProductList(resultSet);
         } catch (SQLException e) {
-            System.out.println("Error while getting product list by category");
+            logger.error("Error while getting product list by category: '{}'", productCategory.toString());
             return null;
         }
     }

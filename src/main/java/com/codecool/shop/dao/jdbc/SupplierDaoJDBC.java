@@ -3,8 +3,9 @@ package com.codecool.shop.dao.jdbc;
 import com.codecool.shop.dao.SupplierDao;
 import com.codecool.shop.mapper.ProductMapper;
 import com.codecool.shop.model.Product;
-import com.codecool.shop.model.ProductCategory;
 import com.codecool.shop.model.Supplier;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -12,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SupplierDaoJDBC implements SupplierDao{
+    private static final Logger logger = LoggerFactory.getLogger(SupplierDaoJDBC.class);
 
     private final DataSource dataSource;
     private static SupplierDao instance;
@@ -37,7 +39,7 @@ public class SupplierDaoJDBC implements SupplierDao{
             statement.setString(2, supplier.getDescription());
             statement.executeUpdate();
         } catch (SQLException e) {
-            System.out.println("Error while adding supplier");
+            logger.error("Error while adding supplier: '{}'", supplier.toString());
         }
     }
 
@@ -75,7 +77,7 @@ public class SupplierDaoJDBC implements SupplierDao{
                 return supplier;
             }
         } catch (SQLException e) {
-            System.out.println("Error while finding supplier");
+            logger.error("Error while finding supplier with id = '{}'", id);
         }
         return null;
     }
@@ -88,7 +90,7 @@ public class SupplierDaoJDBC implements SupplierDao{
             statement.setInt(1, id);
             statement.executeUpdate();
         } catch (SQLException e) {
-            System.out.println("Error while deleting supplier");
+            logger.error("Error while deleting supplier with id = '{}'", id);
         }
     }
 
@@ -131,7 +133,7 @@ public class SupplierDaoJDBC implements SupplierDao{
             suppliers.add(actualSupplier);
             return suppliers;
         } catch (SQLException e) {
-            System.out.println("Error while getting supplier list");
+            logger.error("Error while getting supplier list");
             return null;
         }
     }
