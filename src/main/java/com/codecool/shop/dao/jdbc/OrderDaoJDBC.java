@@ -29,6 +29,10 @@ public class OrderDaoJDBC implements OrderDao {
         return instance;
     }
 
+    public static OrderDao getInstance() {
+        return instance;
+    }
+
     @Override
     public void add(Order order) {
         Map<String, String> data = order.getRelevantInformation();
