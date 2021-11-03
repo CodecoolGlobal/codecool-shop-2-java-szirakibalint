@@ -93,7 +93,7 @@ public class ProductCategoryDaoJDBC implements ProductCategoryDao{
             statement.setInt(1, id);
             statement.executeUpdate();
         } catch (SQLException e) {
-            System.out.println("Error while deleting category");
+            logger.error("Error while deleting category with id = '{}'", id);
         }
     }
 
