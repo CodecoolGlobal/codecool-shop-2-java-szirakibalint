@@ -6,14 +6,13 @@ import org.json.JSONObject;
 import java.math.BigDecimal;
 import java.util.*;
 
-public class Cart {
+public class Cart extends BaseModel{
 
     public static final int DEFAULT_USER_ID = 0;
 
     private static int cartNumber = 0;
 
-    private final int id;
-    private final int userId;
+    private int userId;
     private Map<Product, Integer> products = new HashMap<>();
 
     public Cart() {
@@ -38,6 +37,10 @@ public class Cart {
 
     public int getId() {
         return id;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
     public void add(Product product) {

@@ -35,7 +35,7 @@ CREATE TABLE public.product (
 );
 
 CREATE TABLE public.cart (
-    id INT UNIQUE PRIMARY KEY NOT NULL,
+    id SERIAL PRIMARY KEY NOT NULL,
     user_id INTEGER
 );
 
