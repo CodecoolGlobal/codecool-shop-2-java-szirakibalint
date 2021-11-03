@@ -2,11 +2,17 @@ package com.codecool.shop.model;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class Cart extends BaseModel{
+    private static final Logger logger = LoggerFactory.getLogger(Cart.class);
 
     public static final int DEFAULT_USER_ID = 0;
 
