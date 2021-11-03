@@ -72,7 +72,7 @@ public class CartDaoJDBC implements CartDao {
                 return cartMapper.createCartFromResultSet(resultSet);
             }
         } catch (SQLException e) {
-            System.out.println("Error while finding cart by id");
+            System.out.println("Error while finding cart by user id");
         }
         return null;
     }
@@ -107,7 +107,7 @@ public class CartDaoJDBC implements CartDao {
                 return cartMapper.createCartFromResultSet(resultSet);
             }
         } catch (SQLException e) {
-            System.out.println("Error while finding cart by user id");
+            System.out.println("Error while finding cart by id");
         }
         return null;
     }
@@ -124,33 +124,83 @@ public class CartDaoJDBC implements CartDao {
                 return resultSet.getInt("count");
             }
         } catch (SQLException e) {
-            System.out.println("Error while finding cart by user id");
+            System.out.println("Error while counting products in cart");
         }
         return 0;
     }
 
     @Override
     public void addToCart(int cartId, Product product) {
-
+        try (Connection conn = dataSource.getConnection()) {
+            String sql = "INSERT INTO cart_product (cart_id, product_id) VALUES (?, ?)";
+            PreparedStatement statement = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            statement.setInt(1, cartId);
+            statement.setInt(2, product.getId());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Error while adding product to cart");
+        }
     }
 
     @Override
     public void removeOneFromCart(int cartId, Product product) {
-
+        try (Connection conn = dataSource.getConnection()) {
+            String sql = "DELETE FROM cart_product " +
+                    "WHERE id " +
+                    "IN (SELECT id " +
+                    "FROM cart_product " +
+                    "WHERE cart_id = ? AND product_id = ? " +
+                    "LIMIT 1)";
+            PreparedStatement statement = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            statement.setInt(1, cartId);
+            statement.setInt(2, product.getId());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Error while removing one product from cart");
+        }
     }
 
     @Override
     public void removeProductFromCart(int cartId, Product product) {
-
+        try (Connection conn = dataSource.getConnection()) {
+            String sql = "DELETE FROM cart_product WHERE cart_id = ? AND product_id = ?";
+            PreparedStatement statement = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            statement.setInt(1, cartId);
+            statement.setInt(2, product.getId());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Error while removing product from cart");
+        }
     }
 
     @Override
     public void removeAllFromCart(int cartId) {
-
+        try (Connection conn = dataSource.getConnection()) {
+            String sql = "DELETE FROM cart_product WHERE cart_id = ? AND product_id = ?";
+            PreparedStatement statement = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            statement.setInt(1, cartId);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Error while removing all products from cart");
+        }
     }
 
     @Override
     public BigDecimal getTotalSum(int cartId) {
-        return null;
+        try (Connection conn = dataSource.getConnection()) {
+            String sql = "SELECT SUM(product.default_price) AS sum " +
+                    "FROM cart_product " +
+                    "LEFT JOIN product ON product.id = cart_product.product_id " +
+                    "WHERE cart_id = ?";
+            PreparedStatement statement = conn.prepareStatement(sql);
+            statement.setInt(1, cartId);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                return resultSet.getBigDecimal("sum");
+            }
+        } catch (SQLException e) {
+            System.out.println("Error while counting products in cart");
+        }
+        return BigDecimal.ZERO;
     }
 }
