@@ -87,7 +87,7 @@ public class ProductDaoJDBC implements ProductDao {
             statement.setInt(1, id);
             statement.executeUpdate();
         } catch (SQLException e) {
-            System.out.println("Error while deleting product");
+            logger.error("Error while deleting product with id = '{}'", id);
         }
     }
 
