@@ -119,7 +119,7 @@ public class ProductDaoJDBC implements ProductDao {
             }
             return products;
         } catch (SQLException e) {
-            System.out.println("Error while getting product list");
+            logger.error("Error while getting product list");
             return null;
         }
     }
