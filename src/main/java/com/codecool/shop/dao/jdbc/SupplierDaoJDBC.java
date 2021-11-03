@@ -1,6 +1,7 @@
 package com.codecool.shop.dao.jdbc;
 
 import com.codecool.shop.dao.SupplierDao;
+import com.codecool.shop.mapper.ProductMapper;
 import com.codecool.shop.model.Product;
 import com.codecool.shop.model.ProductCategory;
 import com.codecool.shop.model.Supplier;
@@ -14,6 +15,7 @@ public class SupplierDaoJDBC implements SupplierDao{
 
     private final DataSource dataSource;
     private static SupplierDao instance;
+    private final ProductMapper productMapper = new ProductMapper();
 
     private SupplierDaoJDBC(DataSource dataSource) {
         this.dataSource = dataSource;
@@ -64,10 +66,10 @@ public class SupplierDaoJDBC implements SupplierDao{
             if (resultSet.next()) {
                 Supplier supplier = new Supplier(resultSet.getString("supplier_name"), resultSet.getString("supplier_description"));
                 supplier.setId(resultSet.getInt("supplier_id"));
-                Product product = Product.createProductFromResultSet(resultSet);
+                Product product = productMapper.createProductFromResultSet(resultSet);
                 product.setSupplier(supplier);
                 while(resultSet.next()) {
-                    product = Product.createProductFromResultSet(resultSet);
+                    product = productMapper.createProductFromResultSet(resultSet);
                     product.setSupplier(supplier);
                 }
                 return supplier;
@@ -123,7 +125,7 @@ public class SupplierDaoJDBC implements SupplierDao{
                     actualSupplier.setId(resultSet.getInt("supplier_id"));
                     actualSupplierId = actualSupplier.getId();
                 }
-                Product product = Product.createProductFromResultSet(resultSet);
+                Product product = productMapper.createProductFromResultSet(resultSet);
                 product.setSupplier(actualSupplier);
             }
             suppliers.add(actualSupplier);

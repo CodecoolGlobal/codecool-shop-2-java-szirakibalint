@@ -2,6 +2,7 @@ package com.codecool.shop.dao.jdbc;
 
 import com.codecool.shop.dao.ProductCategoryDao;
 import com.codecool.shop.dao.SupplierDao;
+import com.codecool.shop.mapper.ProductMapper;
 import com.codecool.shop.model.Product;
 import com.codecool.shop.model.ProductCategory;
 import com.codecool.shop.model.Supplier;
@@ -15,6 +16,7 @@ public class ProductCategoryDaoJDBC implements ProductCategoryDao{
 
     private final DataSource dataSource;
     private static ProductCategoryDao instance;
+    private final ProductMapper productMapper = new ProductMapper();
 
     private ProductCategoryDaoJDBC(DataSource dataSource) {
         this.dataSource = dataSource;
@@ -68,10 +70,10 @@ public class ProductCategoryDaoJDBC implements ProductCategoryDao{
                         resultSet.getString("category_department"),
                         resultSet.getString("category_description"));
                 category.setId(resultSet.getInt("category_id"));
-                Product product = Product.createProductFromResultSet(resultSet);
+                Product product = productMapper.createProductFromResultSet(resultSet);
                 product.setProductCategory(category);
                 while(resultSet.next()) {
-                    product = Product.createProductFromResultSet(resultSet);
+                    product = productMapper.createProductFromResultSet(resultSet);
                     product.setProductCategory(category);
                 }
                 return category;
@@ -129,7 +131,7 @@ public class ProductCategoryDaoJDBC implements ProductCategoryDao{
                     actualCategory.setId(resultSet.getInt("category_id"));
                     actualCategoryId = actualCategory.getId();
                 }
-                Product product = Product.createProductFromResultSet(resultSet);
+                Product product = productMapper.createProductFromResultSet(resultSet);
                 product.setProductCategory(actualCategory);
             }
             categories.add(actualCategory);
