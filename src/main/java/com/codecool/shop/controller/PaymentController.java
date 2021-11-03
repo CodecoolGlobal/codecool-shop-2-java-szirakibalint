@@ -56,10 +56,10 @@ public class PaymentController extends HttpServlet {
         OrderService paymentService = new OrderService(cartDao, orderDao, productDao);
         LoggerService loggerService = new LoggerService(orderDao, cartDao, productDao);
         paymentService.payForOrder(orderId);
+        cartService.emptyCart();
 
         PrintWriter writer = resp.getWriter();
         loggerService.logOrder(Integer.parseInt(orderId));
-        cartService.emptyCart();
         writer.println(String.format("order with ID %s paid\n", orderId));
     }
 }
