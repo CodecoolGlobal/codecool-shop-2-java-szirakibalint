@@ -90,7 +90,7 @@ public class SupplierDaoJDBC implements SupplierDao{
             statement.setInt(1, id);
             statement.executeUpdate();
         } catch (SQLException e) {
-            System.out.println("Error while deleting supplier");
+            logger.error("Error while deleting supplier with id = '{}'", id);
         }
     }
 
