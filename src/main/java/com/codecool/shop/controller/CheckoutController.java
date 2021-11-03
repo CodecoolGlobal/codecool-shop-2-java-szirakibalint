@@ -7,8 +7,9 @@ import com.codecool.shop.dao.ProductDao;
 import com.codecool.shop.dao.implementation.CartDaoMem;
 import com.codecool.shop.dao.implementation.OrderDaoMem;
 import com.codecool.shop.dao.implementation.ProductDaoMem;
-import com.codecool.shop.model.Order;
 import com.codecool.shop.service.OrderService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 
@@ -25,6 +26,7 @@ import java.util.Map;
 
 @WebServlet(urlPatterns = "/checkout")
 public class CheckoutController extends HttpServlet {
+    private static final Logger logger = LoggerFactory.getLogger(CheckoutController.class);
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
