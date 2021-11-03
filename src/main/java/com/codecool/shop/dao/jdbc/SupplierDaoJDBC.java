@@ -133,7 +133,7 @@ public class SupplierDaoJDBC implements SupplierDao{
             suppliers.add(actualSupplier);
             return suppliers;
         } catch (SQLException e) {
-            System.out.println("Error while getting supplier list");
+            logger.error("Error while getting supplier list");
             return null;
         }
     }
