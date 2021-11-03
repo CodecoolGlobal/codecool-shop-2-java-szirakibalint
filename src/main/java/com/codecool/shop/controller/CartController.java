@@ -50,7 +50,7 @@ public class CartController extends HttpServlet {
             JSONObject payload = new JSONObject(jb.toString());
             cartService.handlePost(String.valueOf(payload.get("product_id")), String.valueOf(payload.get("cart_id")));
         } catch (JSONException e) {
-            System.out.println("Error parsing JSON request string");
+            logger.warn("payload received in invalid format: '{}'", jb);
         }
     }
 
