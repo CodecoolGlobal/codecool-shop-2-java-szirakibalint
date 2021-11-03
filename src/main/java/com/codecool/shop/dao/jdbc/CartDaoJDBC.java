@@ -106,7 +106,7 @@ public class CartDaoJDBC implements CartDao {
                 return cartMapper.createCartFromResultSet(resultSet);
             }
         } catch (SQLException e) {
-            System.out.println("Error while finding cart by id");
+            logger.error("Error while finding cart for card_id = '{}'", cartId);
         }
         return null;
     }
