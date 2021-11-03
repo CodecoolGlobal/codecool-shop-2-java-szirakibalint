@@ -12,8 +12,8 @@ import java.util.List;
 public class ProductMapper {
 
     public Product createProductFromResultSet(ResultSet resultSet) throws SQLException {
-        Supplier supplier = new Supplier(resultSet.getString("name"), resultSet.getString("description"));
-        supplier.setId(resultSet.getInt("id"));
+        Supplier supplier = new Supplier(resultSet.getString("supplier_name"), resultSet.getString("supplier_description"));
+        supplier.setId(resultSet.getInt("supplier_id"));
         ProductCategory category = new ProductCategory(resultSet.getString("category_name"),
                 resultSet.getString("category_department"),
                 resultSet.getString("category_description"));
