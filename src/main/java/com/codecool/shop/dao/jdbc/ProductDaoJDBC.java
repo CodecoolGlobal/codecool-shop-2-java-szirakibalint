@@ -179,7 +179,7 @@ public class ProductDaoJDBC implements ProductDao {
             ResultSet resultSet = statement.executeQuery();
             return productMapper.createProductList(resultSet);
         } catch (SQLException e) {
-            System.out.println("Error while getting product list by category");
+            logger.error("Error while getting product list by category: '{}'", productCategory.toString());
             return null;
         }
     }
