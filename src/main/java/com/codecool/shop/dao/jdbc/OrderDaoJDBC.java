@@ -3,7 +3,9 @@ package com.codecool.shop.dao.jdbc;
 import com.codecool.shop.dao.OrderDao;
 import com.codecool.shop.dao.SupplierDao;
 import com.codecool.shop.mapper.ProductMapper;
+import com.codecool.shop.model.InvalidOrder;
 import com.codecool.shop.model.Order;
+import com.codecool.shop.model.ValidOrder;
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -30,11 +32,11 @@ public class OrderDaoJDBC implements OrderDao {
     @Override
     public void add(Order order) {
         Map<String, String> data = order.getRelevantInformation();
+        String firstSql;
+        String secondSql;
+        PreparedStatement firstStatement;
+        int id;
         try (Connection conn = dataSource.getConnection()) {
-            String firstSql;
-            String secondSql;
-            PreparedStatement firstStatement;
-            int id;
             if (data.get("valid").equals("true")) {
                 firstSql = "INSERT INTO valid_order (first_name, last_name, country, city, address, user_id) VALUES (?, ?, ?, ?, ?, ?)";
                 firstStatement = conn.prepareStatement(firstSql, Statement.RETURN_GENERATED_KEYS);
@@ -67,6 +69,23 @@ public class OrderDaoJDBC implements OrderDao {
 
     @Override
     public Order find(int id) {
+        try (Connection conn = dataSource.getConnection()) {
+            String sqlFirst = "SELECT valid, " +
+                    "cart_data, " +
+                    "cart_id, " +
+                    "valid_id, " +
+                    "invalid_id " +
+                    "FROM public.order " +
+                    "WHERE id = ?";
+            PreparedStatement statementFirst = conn.prepareStatement(sqlFirst);
+            statementFirst.setInt(1, id);
+            ResultSet resultSet = statementFirst.executeQuery();
+            if (resultSet.next()) {
+                return createOrderFromResultSet(resultSet, statementFirst, conn, id);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error while finding product");
+        }
         return null;
     }
 
@@ -77,6 +96,50 @@ public class OrderDaoJDBC implements OrderDao {
 
     @Override
     public List<Order> getAll() {
+        return null;
+    }
+
+    private Order createOrderFromResultSet(ResultSet resultSet, PreparedStatement statementFirst, Connection conn, int id) throws SQLException {
+        String cart = resultSet.getString("cart_data");
+        int cartId = resultSet.getInt("cart_id");
+        boolean valid = resultSet.getBoolean("valid");
+        if (valid) {
+            String sqlSecond = "SELECT first_name, " +
+                    "last_name, " +
+                    "country, " +
+                    "city, " +
+                    "address, " +
+                    "user_id " +
+                    "FROM valid_order " +
+                    "WHERE id = ?";
+            PreparedStatement statementSecond = conn.prepareStatement(sqlSecond);
+            statementFirst.setInt(1, resultSet.getInt("valid_id"));
+            resultSet = statementSecond.executeQuery();
+            if (resultSet.next()) {
+                Order order = new ValidOrder(resultSet.getString("firstname"),
+                        resultSet.getString("last_name"),
+                        resultSet.getString("country"),
+                        resultSet.getString("city"),
+                        resultSet.getString("address"),
+                        resultSet.getInt("user_id"),
+                        cartId,
+                        cart);
+                order.setId(id);
+                return order;
+            }
+        } else {
+            String sqlSecond = "SELECT message " +
+                    "FROM invalid_order " +
+                    "WHERE id = ?";
+            PreparedStatement statementSecond = conn.prepareStatement(sqlSecond);
+            statementFirst.setInt(1, resultSet.getInt("invalid_id"));
+            resultSet = statementSecond.executeQuery();
+            if (resultSet.next()) {
+                Order order = new InvalidOrder(resultSet.getString("message"), cartId, cart);
+                order.setId(id);
+                return order;
+            }
+        }
         return null;
     }
 }
