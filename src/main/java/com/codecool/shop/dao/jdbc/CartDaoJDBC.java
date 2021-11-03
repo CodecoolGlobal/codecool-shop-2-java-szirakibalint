@@ -37,7 +37,7 @@ public class CartDaoJDBC implements CartDao {
             statement.setInt(1, userId);
             statement.executeUpdate();
         } catch (SQLException e) {
-            System.out.println("Error while creating cart");
+            logger.error("Error while creating cart for user_id = '{}'", userId);
         }
     }
 
