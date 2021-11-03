@@ -67,6 +67,7 @@ public class ProductController extends HttpServlet {
             try {
                 supplierId = Integer.parseInt(supplierIdString);
             } catch (NumberFormatException e) {
+                logger.info("Error while parsing '{}' as supplier_id", supplierIdString);
                 resp.sendRedirect("/");
             }
             Supplier supplier = productService.getProductSupplier(supplierId);
