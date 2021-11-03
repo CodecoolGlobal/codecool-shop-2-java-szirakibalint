@@ -123,7 +123,7 @@ public class CartDaoJDBC implements CartDao {
                 return resultSet.getInt("count");
             }
         } catch (SQLException e) {
-            logger.error("Error while getting '{}' quantity from cart with cart_id = '{}'", product, cartId);
+            logger.error("Error while getting '{}' quantity from cart with cart_id = '{}'", product.toString(), cartId);
         }
         return 0;
     }
@@ -137,7 +137,7 @@ public class CartDaoJDBC implements CartDao {
             statement.setInt(2, product.getId());
             statement.executeUpdate();
         } catch (SQLException e) {
-            logger.error("Error while adding '{}' to cart with cart_id = '{}'", product, cartId);
+            logger.error("Error while adding '{}' to cart with cart_id = '{}'", product.toString(), cartId);
         }
     }
 
@@ -155,7 +155,7 @@ public class CartDaoJDBC implements CartDao {
             statement.setInt(2, product.getId());
             statement.executeUpdate();
         } catch (SQLException e) {
-            logger.error("Error while removing one '{}' from cart with cart_id = '{}'", product, cartId);
+            logger.error("Error while removing one '{}' from cart with cart_id = '{}'", product.toString(), cartId);
         }
     }
 
@@ -168,7 +168,7 @@ public class CartDaoJDBC implements CartDao {
             statement.setInt(2, product.getId());
             statement.executeUpdate();
         } catch (SQLException e) {
-            logger.error("Error while removing '{}' from cart with cart_id = '{}'", product, cartId);
+            logger.error("Error while removing '{}' from cart with cart_id = '{}'", product.toString(), cartId);
         }
     }
 
