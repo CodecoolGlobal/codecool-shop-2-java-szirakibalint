@@ -39,7 +39,7 @@ public class SupplierDaoJDBC implements SupplierDao{
             statement.setString(2, supplier.getDescription());
             statement.executeUpdate();
         } catch (SQLException e) {
-            System.out.println("Error while adding supplier");
+            logger.error("Error while adding supplier: '{}'", supplier.toString());
         }
     }
 
