@@ -40,7 +40,7 @@ public class ProductCategoryDaoJDBC implements ProductCategoryDao{
             statement.setString(3, category.getDescription());
             statement.executeUpdate();
         } catch (SQLException e) {
-            System.out.println("Error while adding product category");
+            logger.error("Error while adding product category: '{}'", category.toString());
         }
     }
 
