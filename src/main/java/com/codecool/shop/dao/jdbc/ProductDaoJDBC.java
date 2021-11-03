@@ -1,22 +1,21 @@
 package com.codecool.shop.dao.jdbc;
 
 import com.codecool.shop.dao.ProductDao;
-import com.codecool.shop.dao.SupplierDao;
+import com.codecool.shop.mapper.ProductMapper;
 import com.codecool.shop.model.Product;
 import com.codecool.shop.model.ProductCategory;
 import com.codecool.shop.model.Supplier;
 
 import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ProductDaoJDBC implements ProductDao {
 
     private final DataSource dataSource;
     private static ProductDao instance;
+    private final ProductMapper productMapper = new ProductMapper();
 
     private ProductDaoJDBC(DataSource dataSource) {
         this.dataSource = dataSource;
@@ -42,32 +41,143 @@ public class ProductDaoJDBC implements ProductDao {
             statement.setInt(6, product.getSupplier().getId());
             statement.executeUpdate();
         } catch (SQLException e) {
-            System.out.println("Error while adding supplier");
+            System.out.println("Error while adding product");
         }
     }
 
     @Override
     public Product find(int id) {
+        try (Connection conn = dataSource.getConnection()) {
+            String sql = "SELECT supplier.id AS supplier_id, " +
+                    "supplier.name AS supplier_name, " +
+                    "supplier.description AS supplier_description, " +
+                    "product.id AS porduct_id, " +
+                    "product.name AS product_name, " +
+                    "product.default_price AS product_price, " +
+                    "product.currency AS product_currency, " +
+                    "product.description AS product_description, " +
+                    "category.id AS category_id, " +
+                    "category.name AS category_name, " +
+                    "category.department AS category_department, " +
+                    "category.description AS category_description " +
+                    "FROM supplier " +
+                    "LEFT JOIN product ON supplier.id = product.supplier_id " +
+                    "LEFT JOIN category ON category.id = product.category_id " +
+                    "WHERE product.id = ?";
+            PreparedStatement statement = conn.prepareStatement(sql);
+            statement.setInt(1, id);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                return productMapper.createProductFromResultSet(resultSet);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error while finding product");
+        }
         return null;
     }
 
     @Override
     public void remove(int id) {
-
+        try (Connection conn = dataSource.getConnection()) {
+            String sql = "DELETE FROM product WHERE id = ?";
+            PreparedStatement statement = conn.prepareStatement(sql);
+            statement.setInt(1, id);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Error while deleting product");
+        }
     }
 
     @Override
     public List<Product> getAll() {
-        return null;
+        try (Connection conn = dataSource.getConnection()) {
+            String sql = "SELECT supplier.id AS supplier_id, " +
+                    "supplier.name AS supplier_name, " +
+                    "supplier.description AS supplier_description, " +
+                    "product.id AS porduct_id, " +
+                    "product.name AS product_name, " +
+                    "product.default_price AS product_price, " +
+                    "product.currency AS product_currency, " +
+                    "product.description AS product_description, " +
+                    "category.id AS category_id, " +
+                    "category.name AS category_name, " +
+                    "category.department AS category_department, " +
+                    "category.description AS category_description " +
+                    "FROM supplier " +
+                    "LEFT JOIN product ON supplier.id = product.supplier_id " +
+                    "LEFT JOIN category ON category.id = product.category_id " +
+                    "ORDER BY product.id";
+            PreparedStatement statement = conn.prepareStatement(sql);
+            ResultSet resultSet = statement.executeQuery();
+            List<Product> products = new ArrayList<>();
+            while (resultSet.next()) {
+                Product product = productMapper.createProductFromResultSet(resultSet);
+                products.add(product);
+            }
+            return products;
+        } catch (SQLException e) {
+            System.out.println("Error while getting product list");
+            return null;
+        }
     }
 
     @Override
     public List<Product> getBy(Supplier supplier) {
-        return null;
+        try (Connection conn = dataSource.getConnection()) {
+            String sql = "SELECT supplier.id AS supplier_id, " +
+                    "supplier.name AS supplier_name, " +
+                    "supplier.description AS supplier_description, " +
+                    "product.id AS porduct_id, " +
+                    "product.name AS product_name, " +
+                    "product.default_price AS product_price, " +
+                    "product.currency AS product_currency, " +
+                    "product.description AS product_description, " +
+                    "category.id AS category_id, " +
+                    "category.name AS category_name, " +
+                    "category.department AS category_department, " +
+                    "category.description AS category_description " +
+                    "FROM supplier " +
+                    "LEFT JOIN product ON supplier.id = product.supplier_id " +
+                    "LEFT JOIN category ON category.id = product.category_id " +
+                    "WHERE supplier.id = ?" +
+                    "ORDER BY product.id";
+            PreparedStatement statement = conn.prepareStatement(sql);
+            statement.setInt(1, supplier.getId());
+            ResultSet resultSet = statement.executeQuery();
+            return productMapper.createProductList(resultSet);
+        } catch (SQLException e) {
+            System.out.println("Error while getting product list by supplier");
+            return null;
+        }
     }
 
     @Override
     public List<Product> getBy(ProductCategory productCategory) {
-        return null;
+        try (Connection conn = dataSource.getConnection()) {
+            String sql = "SELECT supplier.id AS supplier_id, " +
+                    "supplier.name AS supplier_name, " +
+                    "supplier.description AS supplier_description, " +
+                    "product.id AS porduct_id, " +
+                    "product.name AS product_name, " +
+                    "product.default_price AS product_price, " +
+                    "product.currency AS product_currency, " +
+                    "product.description AS product_description, " +
+                    "category.id AS category_id, " +
+                    "category.name AS category_name, " +
+                    "category.department AS category_department, " +
+                    "category.description AS category_description " +
+                    "FROM supplier " +
+                    "LEFT JOIN product ON supplier.id = product.supplier_id " +
+                    "LEFT JOIN category ON category.id = product.category_id " +
+                    "WHERE category.id = ?" +
+                    "ORDER BY product.id";
+            PreparedStatement statement = conn.prepareStatement(sql);
+            statement.setInt(1, productCategory.getId());
+            ResultSet resultSet = statement.executeQuery();
+            return productMapper.createProductList(resultSet);
+        } catch (SQLException e) {
+            System.out.println("Error while getting product list by category");
+            return null;
+        }
     }
 }
