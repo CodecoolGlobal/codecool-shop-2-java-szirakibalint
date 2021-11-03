@@ -1,7 +1,6 @@
 package com.codecool.shop.dao.jdbc;
 
 import com.codecool.shop.dao.OrderDao;
-import com.codecool.shop.dao.SupplierDao;
 import com.codecool.shop.mapper.ProductMapper;
 import com.codecool.shop.model.InvalidOrder;
 import com.codecool.shop.model.Order;
@@ -9,6 +8,7 @@ import com.codecool.shop.model.ValidOrder;
 
 import javax.sql.DataSource;
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -84,7 +84,7 @@ public class OrderDaoJDBC implements OrderDao {
                 return createOrderFromResultSet(resultSet, statementFirst, conn, id);
             }
         } catch (SQLException e) {
-            System.out.println("Error while finding product");
+            System.out.println("Error while finding order");
         }
         return null;
     }
@@ -114,12 +114,31 @@ public class OrderDaoJDBC implements OrderDao {
                 }
             }
         } catch (SQLException e) {
-            System.out.println("Error while adding order");
+            System.out.println("Error while deleting order");
         }
     }
 
     @Override
     public List<Order> getAll() {
+        try (Connection conn = dataSource.getConnection()) {
+            String sqlFirst = "SELECT id, " +
+                    "valid, " +
+                    "cart_data, " +
+                    "cart_id, " +
+                    "valid_id, " +
+                    "invalid_id " +
+                    "FROM public.order";
+            PreparedStatement statementFirst = conn.prepareStatement(sqlFirst);
+            ResultSet resultSet = statementFirst.executeQuery();
+            List<Order> orders = new ArrayList<>();
+            while (resultSet.next()) {
+                Order newOrder = createOrderFromResultSet(resultSet, statementFirst, conn, resultSet.getInt("id"));
+                orders.add(newOrder);
+            }
+            return orders;
+        } catch (SQLException e) {
+            System.out.println("Error while getting all orders");
+        }
         return null;
     }
 
