@@ -198,7 +198,7 @@ public class CartDaoJDBC implements CartDao {
                 return resultSet.getBigDecimal("sum");
             }
         } catch (SQLException e) {
-            System.out.println("Error while counting products in cart");
+            logger.error("Error while counting products in cart with cart_id = '{}'", cartId);
         }
         return BigDecimal.ZERO;
     }
