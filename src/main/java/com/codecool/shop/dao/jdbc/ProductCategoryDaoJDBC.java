@@ -1,11 +1,11 @@
 package com.codecool.shop.dao.jdbc;
 
 import com.codecool.shop.dao.ProductCategoryDao;
-import com.codecool.shop.dao.SupplierDao;
 import com.codecool.shop.mapper.ProductMapper;
 import com.codecool.shop.model.Product;
 import com.codecool.shop.model.ProductCategory;
-import com.codecool.shop.model.Supplier;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ProductCategoryDaoJDBC implements ProductCategoryDao{
+    private static final Logger logger = LoggerFactory.getLogger(ProductCategoryDaoJDBC.class);
 
     private final DataSource dataSource;
     private static ProductCategoryDao instance;
