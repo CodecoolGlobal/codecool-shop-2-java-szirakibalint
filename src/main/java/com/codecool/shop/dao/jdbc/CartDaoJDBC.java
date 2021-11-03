@@ -123,7 +123,7 @@ public class CartDaoJDBC implements CartDao {
                 return resultSet.getInt("count");
             }
         } catch (SQLException e) {
-            System.out.println("Error while counting products in cart");
+            logger.error("Error while getting '{}' quantity from cart with cart_id = '{}'", product, cartId);
         }
         return 0;
     }
