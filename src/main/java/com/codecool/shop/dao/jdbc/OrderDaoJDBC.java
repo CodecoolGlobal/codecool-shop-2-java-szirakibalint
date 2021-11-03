@@ -91,7 +91,31 @@ public class OrderDaoJDBC implements OrderDao {
 
     @Override
     public void remove(int id) {
-
+        try (Connection conn = dataSource.getConnection()) {
+            String sqlSelect = "SELECT valid, valid_id, invalid_id FROM public.order WHERE id = ?";
+            PreparedStatement statementSelect = conn.prepareStatement(sqlSelect, Statement.RETURN_GENERATED_KEYS);
+            statementSelect.setInt(1, id);
+            ResultSet resultSet = statementSelect.executeQuery();
+            if (resultSet.next()) {
+                String sqlDeleteFirst = "DELETE FROM public.order WHERE id = ?";
+                PreparedStatement statementDeleteFirst = conn.prepareStatement(sqlDeleteFirst);
+                statementDeleteFirst.setInt(1, id);
+                statementDeleteFirst.executeUpdate();
+                if (resultSet.getBoolean("valid")) {
+                    String sqlDeleteSecond = "DELETE FROM valid_order WHERE id = ?";
+                    PreparedStatement statementDeleteSecond = conn.prepareStatement(sqlDeleteSecond);
+                    statementDeleteSecond.setInt(1, resultSet.getInt("valid_id"));
+                    statementDeleteSecond.executeUpdate();
+                } else {
+                    String sqlDeleteSecond = "DELETE FROM invalid_order WHERE id = ?";
+                    PreparedStatement statementDeleteSecond = conn.prepareStatement(sqlDeleteSecond);
+                    statementDeleteSecond.setInt(1, resultSet.getInt("invalid_id"));
+                    statementDeleteSecond.executeUpdate();
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Error while adding order");
+        }
     }
 
     @Override
