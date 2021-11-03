@@ -61,7 +61,7 @@ public class ValidOrder extends Order {
                 }});
                 put("cart", cart.createJsonFromCart());
             } catch (JSONException e) {
-                e.printStackTrace();
+                logger.error("Error while creating JSONObject");
             }
         }};
     }
