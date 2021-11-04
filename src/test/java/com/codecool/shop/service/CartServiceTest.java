@@ -2,6 +2,7 @@ package com.codecool.shop.service;
 
 import com.codecool.shop.dao.CartDao;
 import com.codecool.shop.dao.ProductDao;
+import com.codecool.shop.model.Cart;
 import com.codecool.shop.model.Product;
 import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
@@ -60,13 +61,11 @@ public class CartServiceTest {
         assertEquals(cartService.handleGet("0", null).toString(), new JSONObject().toString());
     }
 
-    @Test
-    public void handleGet_withNoProductId_returnsCartWithOneProduct(){
-        cartService.handlePost("1", "0");
-        assertEquals(cartService.handleGet("0", null).toString(), new JSONObject().toString());
-    }
 
-    public void handleGet_withValidArguments_returnsProductQuantity(){
+    @Test
+    public void handleGet_withValidArguments_returnsValidJson(){
+        Mockito.when(cartDao.getCartById(2)).thenReturn(new Cart());
+        assertEquals("{\"quantity\":0,\"total_price\":0}", cartService.handleGet("2", "1").toString());
 
     }
 
