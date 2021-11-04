@@ -14,10 +14,12 @@ public class CartMapper {
         Cart cart = new Cart();
         cart.setId(resultSet.getInt("cart_id"));
         cart.setUserId(resultSet.getInt("user_id"));
-        Product product = productMapper.createProductFromResultSet(resultSet);
-        cart.add(product);
+        if (resultSet.getString("product_name") != null) {
+            Product product = productMapper.createProductFromResultSet(resultSet);
+            cart.add(product);
+        }
         while(resultSet.next()) {
-            product = productMapper.createProductFromResultSet(resultSet);
+            Product product = productMapper.createProductFromResultSet(resultSet);
             cart.add(product);
         }
         return cart;
