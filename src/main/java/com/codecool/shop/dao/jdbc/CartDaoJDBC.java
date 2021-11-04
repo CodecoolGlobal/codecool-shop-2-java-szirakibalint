@@ -48,26 +48,7 @@ public class CartDaoJDBC implements CartDao {
     @Override
     public Cart getCartByUserId(int userId) {
         try (Connection conn = dataSource.getConnection()) {
-            String sql = "SELECT cart.id AS cart_id, " +
-                    "cart.id AS user_id, " +
-                    "product.id AS product_id, " +
-                    "product.name AS product_name, " +
-                    "product.default_price AS product_price, " +
-                    "product.currency AS product_currency, " +
-                    "product.description AS product_description, " +
-                    "supplier.id AS supplier_id, " +
-                    "supplier.name AS supplier_name, " +
-                    "supplier.description AS supplier_description, " +
-                    "category.id AS category_id, " +
-                    "category.name AS category_name, " +
-                    "category.department AS category_department, " +
-                    "category.description AS category_description " +
-                    "FROM cart " +
-                    "LEFT JOIN cart_product ON cart.id = cart_product.cart_id " +
-                    "LEFT JOIN product ON cart_product.product_id = product.id " +
-                    "LEFT JOIN supplier ON product.supplier_id = supplier.id " +
-                    "LEFT JOIN category ON product.category_id = category.id " +
-                    "WHERE cart.user_id = ?";
+            String sql = getFindQueryString() + "WHERE cart.user_id = ?";
             PreparedStatement statement = conn.prepareStatement(sql);
             statement.setInt(1, userId);
             ResultSet resultSet = statement.executeQuery();
@@ -83,26 +64,7 @@ public class CartDaoJDBC implements CartDao {
     @Override
     public Cart getCartById(int cartId) {
         try (Connection conn = dataSource.getConnection()) {
-            String sql = "SELECT cart.id AS cart_id, " +
-                    "cart.id AS user_id, " +
-                    "product.id AS product_id, " +
-                    "product.name AS product_name, " +
-                    "product.default_price AS product_price, " +
-                    "product.currency AS product_currency, " +
-                    "product.description AS product_description, " +
-                    "supplier.id AS supplier_id, " +
-                    "supplier.name AS supplier_name, " +
-                    "supplier.description AS supplier_description, " +
-                    "category.id AS category_id, " +
-                    "category.name AS category_name, " +
-                    "category.department AS category_department, " +
-                    "category.description AS category_description " +
-                    "FROM cart " +
-                    "LEFT JOIN cart_product ON cart.id = cart_product.cart_id " +
-                    "LEFT JOIN product ON cart_product.product_id = product.id " +
-                    "LEFT JOIN supplier ON product.supplier_id = supplier.id " +
-                    "LEFT JOIN category ON product.category_id = category.id " +
-                    "WHERE cart.id = ?";
+            String sql = getFindQueryString() + "WHERE cart.id = ?";
             PreparedStatement statement = conn.prepareStatement(sql);
             statement.setInt(1, cartId);
             ResultSet resultSet = statement.executeQuery();
@@ -205,5 +167,27 @@ public class CartDaoJDBC implements CartDao {
             logger.error("Error while counting products in cart with cart_id = '{}'", cartId);
         }
         return BigDecimal.ZERO;
+    }
+
+    private String getFindQueryString() {
+        return "SELECT cart.id AS cart_id, " +
+                "cart.id AS user_id, " +
+                "product.id AS product_id, " +
+                "product.name AS product_name, " +
+                "product.default_price AS product_price, " +
+                "product.currency AS product_currency, " +
+                "product.description AS product_description, " +
+                "supplier.id AS supplier_id, " +
+                "supplier.name AS supplier_name, " +
+                "supplier.description AS supplier_description, " +
+                "category.id AS category_id, " +
+                "category.name AS category_name, " +
+                "category.department AS category_department, " +
+                "category.description AS category_description " +
+                "FROM cart " +
+                "LEFT JOIN cart_product ON cart.id = cart_product.cart_id " +
+                "LEFT JOIN product ON cart_product.product_id = product.id " +
+                "LEFT JOIN supplier ON product.supplier_id = supplier.id " +
+                "LEFT JOIN category ON product.category_id = category.id ";
     }
 }
