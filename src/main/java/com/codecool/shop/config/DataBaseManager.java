@@ -1,11 +1,14 @@
 package com.codecool.shop.config;
 
 import org.postgresql.ds.PGSimpleDataSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.sql.DataSource;
 import java.sql.SQLException;
 
 public class DataBaseManager {
+    private static final Logger logger = LoggerFactory.getLogger(DataBaseManager.class);
 
     private static DataBaseManager instance;
 
@@ -27,7 +30,7 @@ public class DataBaseManager {
         try {
             dataSource.getConnection().close();
         } catch (SQLException sqle) {
-            sqle.printStackTrace();
+            logger.error("Error while getting connection data");
         }
         return dataSource;
     }

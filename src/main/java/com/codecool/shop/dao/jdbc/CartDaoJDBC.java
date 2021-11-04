@@ -4,12 +4,15 @@ import com.codecool.shop.dao.CartDao;
 import com.codecool.shop.mapper.CartMapper;
 import com.codecool.shop.model.Cart;
 import com.codecool.shop.model.Product;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.sql.DataSource;
 import java.math.BigDecimal;
 import java.sql.*;
 
 public class CartDaoJDBC implements CartDao {
+    private static final Logger logger = LoggerFactory.getLogger(CartDaoJDBC.class);
 
     private final DataSource dataSource;
     private static CartDao instance;
@@ -34,7 +37,7 @@ public class CartDaoJDBC implements CartDao {
             statement.setInt(1, userId);
             statement.executeUpdate();
         } catch (SQLException e) {
-            System.out.println("Error while creating cart");
+            logger.error("Error while creating cart for user_id = '{}'", userId);
         }
     }
 
@@ -68,7 +71,7 @@ public class CartDaoJDBC implements CartDao {
                 return cartMapper.createCartFromResultSet(resultSet);
             }
         } catch (SQLException e) {
-            System.out.println("Error while finding cart by user id");
+            logger.error("Error while finding cart for user_id = '{}'", userId);
         }
         return null;
     }
@@ -103,7 +106,7 @@ public class CartDaoJDBC implements CartDao {
                 return cartMapper.createCartFromResultSet(resultSet);
             }
         } catch (SQLException e) {
-            System.out.println("Error while finding cart by id");
+            logger.error("Error while finding cart for card_id = '{}'", cartId);
         }
         return null;
     }
@@ -120,7 +123,7 @@ public class CartDaoJDBC implements CartDao {
                 return resultSet.getInt("count");
             }
         } catch (SQLException e) {
-            System.out.println("Error while counting products in cart");
+            logger.error("Error while getting '{}' quantity from cart with cart_id = '{}'", product.toString(), cartId);
         }
         return 0;
     }
@@ -134,7 +137,7 @@ public class CartDaoJDBC implements CartDao {
             statement.setInt(2, product.getId());
             statement.executeUpdate();
         } catch (SQLException e) {
-            System.out.println("Error while adding product to cart");
+            logger.error("Error while adding '{}' to cart with cart_id = '{}'", product.toString(), cartId);
         }
     }
 
@@ -152,7 +155,7 @@ public class CartDaoJDBC implements CartDao {
             statement.setInt(2, product.getId());
             statement.executeUpdate();
         } catch (SQLException e) {
-            System.out.println("Error while removing one product from cart");
+            logger.error("Error while removing one '{}' from cart with cart_id = '{}'", product.toString(), cartId);
         }
     }
 
@@ -165,7 +168,7 @@ public class CartDaoJDBC implements CartDao {
             statement.setInt(2, product.getId());
             statement.executeUpdate();
         } catch (SQLException e) {
-            System.out.println("Error while removing product from cart");
+            logger.error("Error while removing '{}' from cart with cart_id = '{}'", product.toString(), cartId);
         }
     }
 
@@ -177,7 +180,7 @@ public class CartDaoJDBC implements CartDao {
             statement.setInt(1, cartId);
             statement.executeUpdate();
         } catch (SQLException e) {
-            System.out.println("Error while removing all products from cart");
+            logger.error("Error while removing all products from cart with cart_id = '{}'", cartId);
         }
     }
 
@@ -195,7 +198,7 @@ public class CartDaoJDBC implements CartDao {
                 return resultSet.getBigDecimal("sum");
             }
         } catch (SQLException e) {
-            System.out.println("Error while counting products in cart");
+            logger.error("Error while counting products in cart with cart_id = '{}'", cartId);
         }
         return BigDecimal.ZERO;
     }
