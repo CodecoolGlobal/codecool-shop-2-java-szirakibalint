@@ -1,5 +1,8 @@
 package com.codecool.shop.config;
 
+import com.codecool.shop.dao.*;
+import com.codecool.shop.dao.implementation.*;
+import com.codecool.shop.dao.jdbc.*;
 import org.postgresql.ds.PGSimpleDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,5 +36,60 @@ public class DataBaseManager {
             logger.error("Error while getting connection data");
         }
         return dataSource;
+    }
+
+    public ProductDao getCurrentProductDao() {
+        String config = System.getenv("config");
+        if (config.equals("jdbc")) {
+            return ProductDaoJDBC.getInstance();
+        } else if (config.equals("memory")) {
+            return ProductDaoMem.getInstance();
+        } else {
+            throw new RuntimeException("Invalid config setting");
+        }
+    }
+
+    public ProductCategoryDao getCurrentProductCategoryDao() {
+        String config = System.getenv("config");
+        if (config.equals("jdbc")) {
+            return ProductCategoryDaoJDBC.getInstance();
+        } else if (config.equals("memory")) {
+            return ProductCategoryDaoMem.getInstance();
+        } else {
+            throw new RuntimeException("Invalid config setting");
+        }
+    }
+
+    public SupplierDao getCurrentSupplierDao() {
+        String config = System.getenv("config");
+        if (config.equals("jdbc")) {
+            return SupplierDaoJDBC.getInstance();
+        } else if (config.equals("memory")) {
+            return SupplierDaoMem.getInstance();
+        } else {
+            throw new RuntimeException("Invalid config setting");
+        }
+    }
+
+    public CartDao getCurrentCartDao() {
+        String config = System.getenv("config");
+        if (config.equals("jdbc")) {
+            return CartDaoJDBC.getInstance();
+        } else if (config.equals("memory")) {
+            return CartDaoMem.getInstance();
+        } else {
+            throw new RuntimeException("Invalid config setting");
+        }
+    }
+
+    public OrderDao getCurrentOrderDao() {
+        String config = System.getenv("config");
+        if (config.equals("jdbc")) {
+            return OrderDaoJDBC.getInstance();
+        } else if (config.equals("memory")) {
+            return OrderDaoMem.getInstance();
+        } else {
+            throw new RuntimeException("Invalid config setting");
+        }
     }
 }

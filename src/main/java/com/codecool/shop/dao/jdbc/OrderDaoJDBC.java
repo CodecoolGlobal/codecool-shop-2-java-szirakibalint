@@ -1,7 +1,6 @@
 package com.codecool.shop.dao.jdbc;
 
 import com.codecool.shop.dao.OrderDao;
-import com.codecool.shop.mapper.ProductMapper;
 import com.codecool.shop.model.InvalidOrder;
 import com.codecool.shop.model.Order;
 import com.codecool.shop.model.ValidOrder;
@@ -16,7 +15,6 @@ public class OrderDaoJDBC implements OrderDao {
 
     private final DataSource dataSource;
     private static OrderDao instance;
-    private final ProductMapper productMapper = new ProductMapper();
 
     private OrderDaoJDBC(DataSource dataSource) {
         this.dataSource = dataSource;
@@ -26,6 +24,10 @@ public class OrderDaoJDBC implements OrderDao {
         if (instance == null) {
             instance = new OrderDaoJDBC(dataSource);
         }
+        return instance;
+    }
+
+    public static OrderDao getInstance() {
         return instance;
     }
 

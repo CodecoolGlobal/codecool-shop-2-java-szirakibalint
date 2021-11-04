@@ -29,6 +29,10 @@ public class CartDaoJDBC implements CartDao {
         return instance;
     }
 
+    public static CartDao getInstance() {
+        return instance;
+    }
+
     @Override
     public void createNewCart(int userId) {
         try (Connection conn = dataSource.getConnection()) {
@@ -175,7 +179,7 @@ public class CartDaoJDBC implements CartDao {
     @Override
     public void removeAllFromCart(int cartId) {
         try (Connection conn = dataSource.getConnection()) {
-            String sql = "DELETE FROM cart_product WHERE cart_id = ? AND product_id = ?";
+            String sql = "DELETE FROM cart_product WHERE cart_id = ?";
             PreparedStatement statement = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             statement.setInt(1, cartId);
             statement.executeUpdate();
