@@ -51,22 +51,7 @@ public class ProductCategoryDaoJDBC implements ProductCategoryDao{
     @Override
     public ProductCategory find(int id) {
         try (Connection conn = dataSource.getConnection()) {
-            String sql = "SELECT supplier.id AS supplier_id, " +
-                    "supplier.name AS supplier_name, " +
-                    "supplier.description AS supplier_description, " +
-                    "product.id AS product_id, " +
-                    "product.name AS product_name, " +
-                    "product.default_price AS product_price, " +
-                    "product.currency AS product_currency, " +
-                    "product.description AS product_description, " +
-                    "category.id AS category_id, " +
-                    "category.name AS category_name, " +
-                    "category.department AS category_department, " +
-                    "category.description AS category_description " +
-                    "FROM supplier " +
-                    "LEFT JOIN product ON supplier.id = product.supplier_id " +
-                    "LEFT JOIN category ON category.id = product.category_id " +
-                    "WHERE category.id = ?";
+            String sql = getFindQueryString() + "WHERE category.id = ?";
             PreparedStatement statement = conn.prepareStatement(sql);
             statement.setInt(1, id);
             ResultSet resultSet = statement.executeQuery();
@@ -104,22 +89,7 @@ public class ProductCategoryDaoJDBC implements ProductCategoryDao{
     @Override
     public List<ProductCategory> getAll() {
         try (Connection conn = dataSource.getConnection()) {
-            String sql = "SELECT supplier.id AS supplier_id, " +
-                    "supplier.name AS supplier_name, " +
-                    "supplier.description AS supplier_description, " +
-                    "product.id AS product_id, " +
-                    "product.name AS product_name, " +
-                    "product.default_price AS product_price, " +
-                    "product.currency AS product_currency, " +
-                    "product.description AS product_description, " +
-                    "category.id AS category_id, " +
-                    "category.name AS category_name, " +
-                    "category.department AS category_department, " +
-                    "category.description AS category_description " +
-                    "FROM supplier " +
-                    "LEFT JOIN product ON supplier.id = product.supplier_id " +
-                    "LEFT JOIN category ON category.id = product.category_id " +
-                    "ORDER BY category.id";
+            String sql = getFindQueryString() + "ORDER BY category.id";
             PreparedStatement statement = conn.prepareStatement(sql);
             ResultSet resultSet = statement.executeQuery();
             List<ProductCategory> categories = new ArrayList<>();
@@ -145,5 +115,23 @@ public class ProductCategoryDaoJDBC implements ProductCategoryDao{
             logger.error("Error while getting product category list");
             return null;
         }
+    }
+
+    private String getFindQueryString() {
+        return "SELECT supplier.id AS supplier_id, " +
+                "supplier.name AS supplier_name, " +
+                "supplier.description AS supplier_description, " +
+                "product.id AS product_id, " +
+                "product.name AS product_name, " +
+                "product.default_price AS product_price, " +
+                "product.currency AS product_currency, " +
+                "product.description AS product_description, " +
+                "category.id AS category_id, " +
+                "category.name AS category_name, " +
+                "category.department AS category_department, " +
+                "category.description AS category_description " +
+                "FROM supplier " +
+                "LEFT JOIN product ON supplier.id = product.supplier_id " +
+                "LEFT JOIN category ON category.id = product.category_id ";
     }
 }
