@@ -43,6 +43,7 @@ public class TestChromeCheckout {
         int inputFieldsNumber = driver.findElements(By.cssSelector("[id='checkout-form'] input")).size();
         String expectedUrl = "http://localhost:8080/checkout";
         for (int i = 0; i < inputFieldsNumber; i++) {
+            navigateToPage();
             List<WebElement> inputFields = driver.findElements(By.cssSelector("[id='checkout-form'] input"));
             int index = 0;
             for (WebElement inputField : inputFields) {
