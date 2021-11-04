@@ -7,6 +7,7 @@ import com.codecool.shop.model.Cart;
 import com.codecool.shop.model.InvalidOrder;
 import com.codecool.shop.model.Order;
 import com.codecool.shop.model.Product;
+import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -46,6 +47,7 @@ public class OrderServiceTest {
     @Test
     public void addInvalidOrder_returnsId(){
         Cart mockCart = Mockito.mock(Cart.class);
+        Mockito.when(mockCart.createJsonFromCart()).thenReturn(new JSONObject());
         int orderId = orderService.addNewInvalidOrder("message", mockCart);
 
         Mockito.verify(orderDao).add(any(InvalidOrder.class));
