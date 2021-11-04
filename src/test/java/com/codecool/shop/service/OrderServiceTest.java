@@ -4,15 +4,18 @@ import com.codecool.shop.dao.CartDao;
 import com.codecool.shop.dao.OrderDao;
 import com.codecool.shop.dao.ProductDao;
 import com.codecool.shop.model.Cart;
+import com.codecool.shop.model.InvalidOrder;
+import com.codecool.shop.model.Order;
 import com.codecool.shop.model.Product;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.math.BigDecimal;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.argThat;
 
 public class OrderServiceTest {
     OrderService orderService;
@@ -34,11 +37,19 @@ public class OrderServiceTest {
 
     @Test
     public void getFullPrice_withEmptyCart_returns0(){
-
         BigDecimal result = orderService.getFullPriceForPayment("2");
         BigDecimal expected = BigDecimal.ZERO;
 
         assertEquals(expected, result);
+    }
+
+    @Test
+    public void addInvalidOrder_returnsId(){
+        Cart mockCart = Mockito.mock(Cart.class);
+        int orderId = orderService.addNewInvalidOrder("message", mockCart);
+
+        Mockito.verify(orderDao).add(any(InvalidOrder.class));
+        assertAll(()->Integer.valueOf(orderId));
     }
 
 
