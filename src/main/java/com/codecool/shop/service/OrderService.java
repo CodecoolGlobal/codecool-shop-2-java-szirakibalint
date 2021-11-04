@@ -41,13 +41,14 @@ public class OrderService {
     }
 
     public int addNewValidOrder(int userId, int cartId, String lastName, String firstName, String country, String city, String address) {
-        Order order = new ValidOrder(firstName, lastName, country, city, address, userId, cartDao.getCartById(cartId));
+        Cart cart = cartDao.getCartById(cartId);
+        Order order = new ValidOrder(firstName, lastName, country, city, address, userId, cart.getId(), cart.createJsonFromCart().toString());
         orderDao.add(order);
         return order.getId();
     }
 
     public int addNewInvalidOrder(String message, Cart cart) {
-        Order order = new InvalidOrder(message, cart);
+        Order order = new InvalidOrder(message, cart.getId(), cart.createJsonFromCart().toString());
         orderDao.add(order);
         return order.getId();
     }

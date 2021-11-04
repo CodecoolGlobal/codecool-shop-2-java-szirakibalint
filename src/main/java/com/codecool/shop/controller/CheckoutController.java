@@ -1,5 +1,6 @@
 package com.codecool.shop.controller;
 
+import com.codecool.shop.config.DataBaseManager;
 import com.codecool.shop.config.TemplateEngineUtil;
 import com.codecool.shop.dao.CartDao;
 import com.codecool.shop.dao.OrderDao;
@@ -7,8 +8,9 @@ import com.codecool.shop.dao.ProductDao;
 import com.codecool.shop.dao.implementation.CartDaoMem;
 import com.codecool.shop.dao.implementation.OrderDaoMem;
 import com.codecool.shop.dao.implementation.ProductDaoMem;
-import com.codecool.shop.model.Order;
 import com.codecool.shop.service.OrderService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 
@@ -25,6 +27,7 @@ import java.util.Map;
 
 @WebServlet(urlPatterns = "/checkout")
 public class CheckoutController extends HttpServlet {
+    private static final Logger logger = LoggerFactory.getLogger(CheckoutController.class);
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -39,9 +42,10 @@ public class CheckoutController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 
-        CartDao cartDao = CartDaoMem.getInstance();
-        OrderDao orderDao = OrderDaoMem.getInstance();
-        ProductDao productDao = ProductDaoMem.getInstance();
+        DataBaseManager dataBaseManager = DataBaseManager.getInstance();
+        CartDao cartDao = dataBaseManager.getCurrentCartDao();
+        OrderDao orderDao = dataBaseManager.getCurrentOrderDao();
+        ProductDao productDao = dataBaseManager.getCurrentProductDao();
         OrderService orderService = new OrderService(cartDao, orderDao, productDao);
 
         Enumeration<String> parameterNames = req.getParameterNames();
@@ -57,6 +61,7 @@ public class CheckoutController extends HttpServlet {
         if (orderId != null) {
             resp.sendRedirect(String.format("/payment?order_id=%s", orderId));
         } else {
+            logger.warn("Order id is null!");
             resp.sendRedirect("/checkout");
         }
     }

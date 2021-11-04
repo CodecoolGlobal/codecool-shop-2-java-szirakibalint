@@ -227,7 +227,16 @@ async function apiGet(url) {
 function setCheckoutButtonEvent(){
     const buttons = document.getElementsByClassName("check-out");
     for (let button of buttons) {
-        button.addEventListener('click', ()=>window.location='/checkout');
+        button.addEventListener('click',  async e => {
+            e.preventDefault();
+            const url = "/cart?cart-id=" + sessionStorage.getItem("cart-id");
+            const cart = await apiGet(url);
+            if (cart.total_price !== "0") {
+                window.location='/checkout';
+            } else {
+                alert("Cart is empty!");
+            }
+        });
     }
 }
 async function apiDelete(url, payload="") {
