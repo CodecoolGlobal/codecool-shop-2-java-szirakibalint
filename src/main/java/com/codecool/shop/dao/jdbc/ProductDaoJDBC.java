@@ -55,22 +55,7 @@ public class ProductDaoJDBC implements ProductDao {
     @Override
     public Product find(int id) {
         try (Connection conn = dataSource.getConnection()) {
-            String sql = "SELECT supplier.id AS supplier_id, " +
-                    "supplier.name AS supplier_name, " +
-                    "supplier.description AS supplier_description, " +
-                    "product.id AS product_id, " +
-                    "product.name AS product_name, " +
-                    "product.default_price AS product_price, " +
-                    "product.currency AS product_currency, " +
-                    "product.description AS product_description, " +
-                    "category.id AS category_id, " +
-                    "category.name AS category_name, " +
-                    "category.department AS category_department, " +
-                    "category.description AS category_description " +
-                    "FROM supplier " +
-                    "LEFT JOIN product ON supplier.id = product.supplier_id " +
-                    "LEFT JOIN category ON category.id = product.category_id " +
-                    "WHERE product.id = ?";
+            String sql = getFindQueryString() + "WHERE product.id = ?";
             PreparedStatement statement = conn.prepareStatement(sql);
             statement.setInt(1, id);
             ResultSet resultSet = statement.executeQuery();
@@ -98,22 +83,7 @@ public class ProductDaoJDBC implements ProductDao {
     @Override
     public List<Product> getAll() {
         try (Connection conn = dataSource.getConnection()) {
-            String sql = "SELECT supplier.id AS supplier_id, " +
-                    "supplier.name AS supplier_name, " +
-                    "supplier.description AS supplier_description, " +
-                    "product.id AS product_id, " +
-                    "product.name AS product_name, " +
-                    "product.default_price AS product_price, " +
-                    "product.currency AS product_currency, " +
-                    "product.description AS product_description, " +
-                    "category.id AS category_id, " +
-                    "category.name AS category_name, " +
-                    "category.department AS category_department, " +
-                    "category.description AS category_description " +
-                    "FROM supplier " +
-                    "LEFT JOIN product ON supplier.id = product.supplier_id " +
-                    "LEFT JOIN category ON category.id = product.category_id " +
-                    "ORDER BY product.id";
+            String sql = getFindQueryString() + "ORDER BY product.id";
             PreparedStatement statement = conn.prepareStatement(sql);
             ResultSet resultSet = statement.executeQuery();
             List<Product> products = new ArrayList<>();
@@ -131,21 +101,7 @@ public class ProductDaoJDBC implements ProductDao {
     @Override
     public List<Product> getBy(Supplier supplier) {
         try (Connection conn = dataSource.getConnection()) {
-            String sql = "SELECT supplier.id AS supplier_id, " +
-                    "supplier.name AS supplier_name, " +
-                    "supplier.description AS supplier_description, " +
-                    "product.id AS product_id, " +
-                    "product.name AS product_name, " +
-                    "product.default_price AS product_price, " +
-                    "product.currency AS product_currency, " +
-                    "product.description AS product_description, " +
-                    "category.id AS category_id, " +
-                    "category.name AS category_name, " +
-                    "category.department AS category_department, " +
-                    "category.description AS category_description " +
-                    "FROM supplier " +
-                    "LEFT JOIN product ON supplier.id = product.supplier_id " +
-                    "LEFT JOIN category ON category.id = product.category_id " +
+            String sql = getFindQueryString() +
                     "WHERE supplier.id = ?" +
                     "ORDER BY product.id";
             PreparedStatement statement = conn.prepareStatement(sql);
@@ -161,23 +117,7 @@ public class ProductDaoJDBC implements ProductDao {
     @Override
     public List<Product> getBy(ProductCategory productCategory) {
         try (Connection conn = dataSource.getConnection()) {
-            String sql = "SELECT supplier.id AS supplier_id, " +
-                    "supplier.name AS supplier_name, " +
-                    "supplier.description AS supplier_description, " +
-                    "product.id AS product_id, " +
-                    "product.name AS product_name, " +
-                    "product.default_price AS product_price, " +
-                    "product.currency AS product_currency, " +
-                    "product.description AS product_description, " +
-                    "category.id AS category_id, " +
-                    "category.name AS category_name, " +
-                    "category.department AS category_department, " +
-                    "category.description AS category_description " +
-                    "FROM category " +
-                    "LEFT JOIN product ON category.id = product.category_id " +
-                    "LEFT JOIN supplier ON product.supplier_id = supplier.id " +
-                    "WHERE category.id = ?" +
-                    "ORDER BY product.id";
+            String sql = getFindQueryString() + "ORDER BY product.id";
             PreparedStatement statement = conn.prepareStatement(sql);
             statement.setInt(1, productCategory.getId());
             ResultSet resultSet = statement.executeQuery();
@@ -186,5 +126,23 @@ public class ProductDaoJDBC implements ProductDao {
             logger.error("Error while getting product list by category: '{}'", productCategory.toString());
             return null;
         }
+    }
+
+    private String getFindQueryString() {
+        return "SELECT supplier.id AS supplier_id, " +
+                "supplier.name AS supplier_name, " +
+                "supplier.description AS supplier_description, " +
+                "product.id AS product_id, " +
+                "product.name AS product_name, " +
+                "product.default_price AS product_price, " +
+                "product.currency AS product_currency, " +
+                "product.description AS product_description, " +
+                "category.id AS category_id, " +
+                "category.name AS category_name, " +
+                "category.department AS category_department, " +
+                "category.description AS category_description " +
+                "FROM supplier " +
+                "LEFT JOIN product ON supplier.id = product.supplier_id " +
+                "LEFT JOIN category ON category.id = product.category_id ";
     }
 }
