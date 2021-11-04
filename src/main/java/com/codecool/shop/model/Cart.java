@@ -2,18 +2,23 @@ package com.codecool.shop.model;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-public class Cart {
+public class Cart extends BaseModel{
+    private static final Logger logger = LoggerFactory.getLogger(Cart.class);
 
     public static final int DEFAULT_USER_ID = 0;
 
     private static int cartNumber = 0;
 
-    private final int id;
-    private final int userId;
+    private int userId;
     private Map<Product, Integer> products = new HashMap<>();
 
     public Cart() {
@@ -38,6 +43,10 @@ public class Cart {
 
     public int getId() {
         return id;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
     public void add(Product product) {
@@ -96,7 +105,7 @@ public class Cart {
                 put("products", products);
                 put("total_price", String.valueOf(totalSum));
             } catch (JSONException e) {
-                e.printStackTrace();
+                logger.error("Error while creating JSON from Cart");
             }
         }};
     }
@@ -113,7 +122,7 @@ public class Cart {
                     put("supplier", product.getSupplier().getName());
                     put("quantity", products.get(product));
                 } catch (JSONException e) {
-                    e.printStackTrace();
+                    logger.error("Error while creating JSON from cart content");
                 }
             }};
             cartJson.add(newJson);

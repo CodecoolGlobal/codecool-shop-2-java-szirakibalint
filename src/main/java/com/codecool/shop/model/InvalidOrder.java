@@ -2,15 +2,18 @@ package com.codecool.shop.model;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class InvalidOrder extends Order {
+    private static final Logger logger = LoggerFactory.getLogger(InvalidOrder.class);
 
     private final String errorMessage;
 
-    public InvalidOrder(String errorMessage, Cart cart) {
-        super(cart);
+    public InvalidOrder(String errorMessage, int cartId, String cart) {
+        super(cart, cartId);
         this.errorMessage = errorMessage;
     }
 
@@ -21,10 +24,20 @@ public class InvalidOrder extends Order {
                 put("status", "failed");
                 put("id", id);
                 put("error_message", errorMessage);
-                put("cart", cart.createJsonFromCart());
+                put("cart", cart);
             } catch (JSONException e) {
-                e.printStackTrace();
+                logger.error("Error while creating JSONObject");
             }
+        }};
+    }
+
+    @Override
+    public HashMap<String, String> getRelevantInformation() {
+        return new HashMap<>(){{
+            put("valid", "false");
+            put("cart_id", String.valueOf(cartId));
+            put("cart_data", cart.toString());
+            put("message", errorMessage);
         }};
     }
 }

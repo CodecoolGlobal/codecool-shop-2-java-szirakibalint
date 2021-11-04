@@ -78,21 +78,4 @@ public class Product extends BaseModel {
                 this.productCategory.getName(),
                 this.supplier.getName());
     }
-
-    public static Product createProductFromResultSet(ResultSet resultSet) throws SQLException {
-        Supplier supplier = new Supplier(resultSet.getString("name"), resultSet.getString("description"));
-        supplier.setId(resultSet.getInt("id"));
-        ProductCategory category = new ProductCategory(resultSet.getString("category_name"),
-                resultSet.getString("category_department"),
-                resultSet.getString("category_description"));
-        category.setId(resultSet.getInt("category_id"));
-        Product product = new Product(resultSet.getString("product_name"),
-                resultSet.getBigDecimal("product_price"),
-                resultSet.getString("product_currency"),
-                resultSet.getString("product_description"),
-                category,
-                supplier);
-        product.setId(resultSet.getInt("product_id"));
-        return product;
-    }
 }

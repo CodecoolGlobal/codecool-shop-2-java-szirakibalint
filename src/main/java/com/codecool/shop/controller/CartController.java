@@ -1,5 +1,6 @@
 package com.codecool.shop.controller;
 
+import com.codecool.shop.config.DataBaseManager;
 import com.codecool.shop.dao.CartDao;
 import com.codecool.shop.dao.ProductDao;
 import com.codecool.shop.dao.implementation.CartDaoMem;
@@ -16,12 +17,16 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @WebServlet(urlPatterns = {"/cart"})
 public class CartController extends HttpServlet {
+    private static final Logger logger = LoggerFactory.getLogger(CartController.class);
 
-    CartDao cartDao = CartDaoMem.getInstance();
-    ProductDao productDataStore = ProductDaoMem.getInstance();
+    DataBaseManager dataBaseManager = DataBaseManager.getInstance();
+    CartDao cartDao = dataBaseManager.getCurrentCartDao();
+    ProductDao productDataStore = dataBaseManager.getCurrentProductDao();
     CartService cartService = new CartService(cartDao, productDataStore);
 
     @Override
@@ -47,7 +52,7 @@ public class CartController extends HttpServlet {
             JSONObject payload = new JSONObject(jb.toString());
             cartService.handlePost(String.valueOf(payload.get("product_id")), String.valueOf(payload.get("cart_id")));
         } catch (JSONException e) {
-            System.out.println("Error parsing JSON request string");
+            logger.warn("payload received in invalid format: '{}'", jb);
         }
     }
 

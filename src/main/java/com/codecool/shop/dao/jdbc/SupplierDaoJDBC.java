@@ -1,9 +1,11 @@
 package com.codecool.shop.dao.jdbc;
 
 import com.codecool.shop.dao.SupplierDao;
+import com.codecool.shop.mapper.ProductMapper;
 import com.codecool.shop.model.Product;
-import com.codecool.shop.model.ProductCategory;
 import com.codecool.shop.model.Supplier;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -11,9 +13,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SupplierDaoJDBC implements SupplierDao{
+    private static final Logger logger = LoggerFactory.getLogger(SupplierDaoJDBC.class);
 
     private final DataSource dataSource;
     private static SupplierDao instance;
+    private final ProductMapper productMapper = new ProductMapper();
 
     private SupplierDaoJDBC(DataSource dataSource) {
         this.dataSource = dataSource;
@@ -26,6 +30,10 @@ public class SupplierDaoJDBC implements SupplierDao{
         return instance;
     }
 
+    public static SupplierDao getInstance() {
+        return instance;
+    }
+
     @Override
     public void add(Supplier supplier) {
         try (Connection conn = dataSource.getConnection()) {
@@ -35,7 +43,7 @@ public class SupplierDaoJDBC implements SupplierDao{
             statement.setString(2, supplier.getDescription());
             statement.executeUpdate();
         } catch (SQLException e) {
-            System.out.println("Error while adding supplier");
+            logger.error("Error while adding supplier: '{}'", supplier.toString());
         }
     }
 
@@ -45,7 +53,7 @@ public class SupplierDaoJDBC implements SupplierDao{
             String sql = "SELECT supplier.id AS supplier_id, " +
                     "supplier.name AS supplier_name, " +
                     "supplier.description AS supplier_description, " +
-                    "product.id AS porduct_id, " +
+                    "product.id AS product_id, " +
                     "product.name AS product_name, " +
                     "product.default_price AS product_price, " +
                     "product.currency AS product_currency, " +
@@ -64,16 +72,16 @@ public class SupplierDaoJDBC implements SupplierDao{
             if (resultSet.next()) {
                 Supplier supplier = new Supplier(resultSet.getString("supplier_name"), resultSet.getString("supplier_description"));
                 supplier.setId(resultSet.getInt("supplier_id"));
-                Product product = Product.createProductFromResultSet(resultSet);
+                Product product = productMapper.createProductFromResultSet(resultSet);
                 product.setSupplier(supplier);
                 while(resultSet.next()) {
-                    product = Product.createProductFromResultSet(resultSet);
+                    product = productMapper.createProductFromResultSet(resultSet);
                     product.setSupplier(supplier);
                 }
                 return supplier;
             }
         } catch (SQLException e) {
-            System.out.println("Error while finding supplier");
+            logger.error("Error while finding supplier with id = '{}'", id);
         }
         return null;
     }
@@ -86,7 +94,7 @@ public class SupplierDaoJDBC implements SupplierDao{
             statement.setInt(1, id);
             statement.executeUpdate();
         } catch (SQLException e) {
-            System.out.println("Error while deleting supplier");
+            logger.error("Error while deleting supplier with id = '{}'", id);
         }
     }
 
@@ -96,7 +104,7 @@ public class SupplierDaoJDBC implements SupplierDao{
             String sql = "SELECT supplier.id AS supplier_id, " +
                     "supplier.name AS supplier_name, " +
                     "supplier.description AS supplier_description, " +
-                    "product.id AS porduct_id, " +
+                    "product.id AS product_id, " +
                     "product.name AS product_name, " +
                     "product.default_price AS product_price, " +
                     "product.currency AS product_currency, " +
@@ -123,13 +131,13 @@ public class SupplierDaoJDBC implements SupplierDao{
                     actualSupplier.setId(resultSet.getInt("supplier_id"));
                     actualSupplierId = actualSupplier.getId();
                 }
-                Product product = Product.createProductFromResultSet(resultSet);
+                Product product = productMapper.createProductFromResultSet(resultSet);
                 product.setSupplier(actualSupplier);
             }
             suppliers.add(actualSupplier);
             return suppliers;
         } catch (SQLException e) {
-            System.out.println("Error while getting supplier list");
+            logger.error("Error while getting supplier list");
             return null;
         }
     }

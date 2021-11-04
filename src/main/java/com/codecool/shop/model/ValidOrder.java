@@ -2,10 +2,14 @@ package com.codecool.shop.model;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class ValidOrder extends Order {
+    private static final Logger logger = LoggerFactory.getLogger(ValidOrder.class);
 
     private final String firstName;
     private final String lastName;
@@ -13,25 +17,15 @@ public class ValidOrder extends Order {
     private final String city;
     private final String address;
     private final int userId;
-    private final Map<Product, Integer> products;
 
-    public ValidOrder(String firstName, String lastName, String country, String city, String address, int userId, Cart cart) {
-        super(cart);
+    public ValidOrder(String firstName, String lastName, String country, String city, String address, int userId, int cartId, String cart) {
+        super(cart, cartId);
         this.firstName = firstName;
         this.lastName = lastName;
         this.country = country;
         this.city = city;
         this.address = address;
         this.userId = userId;
-        this.products = cart.getProducts();
-    }
-
-    public Cart getCart() {
-        return cart;
-    }
-
-    public Map<Product, Integer> getProducts() {
-        return products;
     }
 
     @Override
@@ -40,7 +34,7 @@ public class ValidOrder extends Order {
                 " " + firstName +
                 " " + lastName +
                 " " + address +
-                " " + products.toString();
+                " " + cart.toString();
     }
 
     @Override
@@ -56,10 +50,25 @@ public class ValidOrder extends Order {
                     put("city", city);
                     put("address", address);
                 }});
-                put("cart", cart.createJsonFromCart());
+                put("cart", cart);
             } catch (JSONException e) {
-                e.printStackTrace();
+                logger.error("Error while creating JSONObject");
             }
+        }};
+    }
+
+    @Override
+    public HashMap<String, String> getRelevantInformation() {
+        return new HashMap<>(){{
+           put("valid", "true");
+           put("cart_id", String.valueOf(cartId));
+           put("cart_data", cart.toString());
+           put("first_name", firstName);
+           put("last_name", lastName);
+           put("country", country);
+           put("city", city);
+           put("address", address);
+           put("user_id", String.valueOf(userId));
         }};
     }
 }

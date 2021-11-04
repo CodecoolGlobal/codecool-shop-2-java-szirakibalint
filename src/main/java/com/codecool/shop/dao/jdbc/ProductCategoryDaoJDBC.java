@@ -1,10 +1,11 @@
 package com.codecool.shop.dao.jdbc;
 
 import com.codecool.shop.dao.ProductCategoryDao;
-import com.codecool.shop.dao.SupplierDao;
+import com.codecool.shop.mapper.ProductMapper;
 import com.codecool.shop.model.Product;
 import com.codecool.shop.model.ProductCategory;
-import com.codecool.shop.model.Supplier;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -12,9 +13,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ProductCategoryDaoJDBC implements ProductCategoryDao{
+    private static final Logger logger = LoggerFactory.getLogger(ProductCategoryDaoJDBC.class);
 
     private final DataSource dataSource;
     private static ProductCategoryDao instance;
+    private final ProductMapper productMapper = new ProductMapper();
 
     private ProductCategoryDaoJDBC(DataSource dataSource) {
         this.dataSource = dataSource;
@@ -24,6 +27,10 @@ public class ProductCategoryDaoJDBC implements ProductCategoryDao{
         if (instance == null) {
             instance = new ProductCategoryDaoJDBC(dataSource);
         }
+        return instance;
+    }
+
+    public static ProductCategoryDao getInstance() {
         return instance;
     }
 
@@ -37,7 +44,7 @@ public class ProductCategoryDaoJDBC implements ProductCategoryDao{
             statement.setString(3, category.getDescription());
             statement.executeUpdate();
         } catch (SQLException e) {
-            System.out.println("Error while adding product category");
+            logger.error("Error while adding product category: '{}'", category.toString());
         }
     }
 
@@ -47,7 +54,7 @@ public class ProductCategoryDaoJDBC implements ProductCategoryDao{
             String sql = "SELECT supplier.id AS supplier_id, " +
                     "supplier.name AS supplier_name, " +
                     "supplier.description AS supplier_description, " +
-                    "product.id AS porduct_id, " +
+                    "product.id AS product_id, " +
                     "product.name AS product_name, " +
                     "product.default_price AS product_price, " +
                     "product.currency AS product_currency, " +
@@ -68,16 +75,16 @@ public class ProductCategoryDaoJDBC implements ProductCategoryDao{
                         resultSet.getString("category_department"),
                         resultSet.getString("category_description"));
                 category.setId(resultSet.getInt("category_id"));
-                Product product = Product.createProductFromResultSet(resultSet);
+                Product product = productMapper.createProductFromResultSet(resultSet);
                 product.setProductCategory(category);
                 while(resultSet.next()) {
-                    product = Product.createProductFromResultSet(resultSet);
+                    product = productMapper.createProductFromResultSet(resultSet);
                     product.setProductCategory(category);
                 }
                 return category;
             }
         } catch (SQLException e) {
-            System.out.println("Error while finding product category");
+            logger.error("Error while finding product category with id = '{}'", id);
         }
         return null;
     }
@@ -90,7 +97,7 @@ public class ProductCategoryDaoJDBC implements ProductCategoryDao{
             statement.setInt(1, id);
             statement.executeUpdate();
         } catch (SQLException e) {
-            System.out.println("Error while deleting category");
+            logger.error("Error while deleting category with id = '{}'", id);
         }
     }
 
@@ -100,7 +107,7 @@ public class ProductCategoryDaoJDBC implements ProductCategoryDao{
             String sql = "SELECT supplier.id AS supplier_id, " +
                     "supplier.name AS supplier_name, " +
                     "supplier.description AS supplier_description, " +
-                    "product.id AS porduct_id, " +
+                    "product.id AS product_id, " +
                     "product.name AS product_name, " +
                     "product.default_price AS product_price, " +
                     "product.currency AS product_currency, " +
@@ -129,13 +136,13 @@ public class ProductCategoryDaoJDBC implements ProductCategoryDao{
                     actualCategory.setId(resultSet.getInt("category_id"));
                     actualCategoryId = actualCategory.getId();
                 }
-                Product product = Product.createProductFromResultSet(resultSet);
+                Product product = productMapper.createProductFromResultSet(resultSet);
                 product.setProductCategory(actualCategory);
             }
             categories.add(actualCategory);
             return categories;
         } catch (SQLException e) {
-            System.out.println("Error while getting product category list");
+            logger.error("Error while getting product category list");
             return null;
         }
     }
