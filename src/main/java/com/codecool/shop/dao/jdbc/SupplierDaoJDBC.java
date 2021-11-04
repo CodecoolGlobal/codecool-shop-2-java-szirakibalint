@@ -50,22 +50,7 @@ public class SupplierDaoJDBC implements SupplierDao{
     @Override
     public Supplier find(int id) {
         try (Connection conn = dataSource.getConnection()) {
-            String sql = "SELECT supplier.id AS supplier_id, " +
-                    "supplier.name AS supplier_name, " +
-                    "supplier.description AS supplier_description, " +
-                    "product.id AS product_id, " +
-                    "product.name AS product_name, " +
-                    "product.default_price AS product_price, " +
-                    "product.currency AS product_currency, " +
-                    "product.description AS product_description, " +
-                    "category.id AS category_id, " +
-                    "category.name AS category_name, " +
-                    "category.department AS category_department, " +
-                    "category.description AS category_description " +
-                    "FROM supplier " +
-                    "LEFT JOIN product ON supplier.id = product.supplier_id " +
-                    "LEFT JOIN category ON category.id = product.category_id " +
-                    "WHERE supplier.id = ?";
+            String sql = getFindQueryString() + "WHERE supplier.id = ?";
             PreparedStatement statement = conn.prepareStatement(sql);
             statement.setInt(1, id);
             ResultSet resultSet = statement.executeQuery();
@@ -101,22 +86,7 @@ public class SupplierDaoJDBC implements SupplierDao{
     @Override
     public List<Supplier> getAll() {
         try (Connection conn = dataSource.getConnection()) {
-            String sql = "SELECT supplier.id AS supplier_id, " +
-                    "supplier.name AS supplier_name, " +
-                    "supplier.description AS supplier_description, " +
-                    "product.id AS product_id, " +
-                    "product.name AS product_name, " +
-                    "product.default_price AS product_price, " +
-                    "product.currency AS product_currency, " +
-                    "product.description AS product_description, " +
-                    "category.id AS category_id, " +
-                    "category.name AS category_name, " +
-                    "category.department AS category_department, " +
-                    "category.description AS category_description " +
-                    "FROM supplier " +
-                    "LEFT JOIN product ON supplier.id = product.supplier_id " +
-                    "LEFT JOIN category ON category.id = product.category_id " +
-                    "ORDER BY supplier.id";
+            String sql = getFindQueryString() + "ORDER BY supplier.id";
             PreparedStatement statement = conn.prepareStatement(sql);
             ResultSet resultSet = statement.executeQuery();
             List<Supplier> suppliers = new ArrayList<>();
@@ -140,5 +110,23 @@ public class SupplierDaoJDBC implements SupplierDao{
             logger.error("Error while getting supplier list");
             return null;
         }
+    }
+
+    private String getFindQueryString() {
+        return "SELECT supplier.id AS supplier_id, " +
+                "supplier.name AS supplier_name, " +
+                "supplier.description AS supplier_description, " +
+                "product.id AS product_id, " +
+                "product.name AS product_name, " +
+                "product.default_price AS product_price, " +
+                "product.currency AS product_currency, " +
+                "product.description AS product_description, " +
+                "category.id AS category_id, " +
+                "category.name AS category_name, " +
+                "category.department AS category_department, " +
+                "category.description AS category_description " +
+                "FROM supplier " +
+                "LEFT JOIN product ON supplier.id = product.supplier_id " +
+                "LEFT JOIN category ON category.id = product.category_id ";
     }
 }
