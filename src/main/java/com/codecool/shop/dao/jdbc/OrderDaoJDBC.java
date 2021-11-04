@@ -58,12 +58,17 @@ public class OrderDaoJDBC implements OrderDao {
                 secondSql = "INSERT INTO public.order (valid, cart_id, cart_data, invalid_id) VALUES (false, ?, ?, ?)";
             }
             ResultSet keys = firstStatement.getGeneratedKeys();
+            keys.next();
             id = keys.getInt(1);
-            PreparedStatement secondStatement = conn.prepareStatement(secondSql);
+            PreparedStatement secondStatement = conn.prepareStatement(secondSql, Statement.RETURN_GENERATED_KEYS);
             secondStatement.setInt(1, Integer.parseInt(data.get("cart_id")));
             secondStatement.setString(2, data.get("cart_data"));
-            secondStatement.setInt(2, id);
+            secondStatement.setInt(3, id);
             secondStatement.executeUpdate();
+            keys = secondStatement.getGeneratedKeys();
+            keys.next();
+            id = keys.getInt(1);
+            order.setId(id);
         } catch (SQLException e) {
             System.out.println("Error while adding order");
         }
@@ -72,7 +77,7 @@ public class OrderDaoJDBC implements OrderDao {
     @Override
     public Order find(int id) {
         try (Connection conn = dataSource.getConnection()) {
-            String sqlFirst = "SELECT valid, " +
+                String sqlFirst = "SELECT valid, " +
                     "cart_data, " +
                     "cart_id, " +
                     "valid_id, " +
@@ -83,7 +88,7 @@ public class OrderDaoJDBC implements OrderDao {
             statementFirst.setInt(1, id);
             ResultSet resultSet = statementFirst.executeQuery();
             if (resultSet.next()) {
-                return createOrderFromResultSet(resultSet, statementFirst, conn, id);
+                return createOrderFromResultSet(resultSet, conn, id);
             }
         } catch (SQLException e) {
             System.out.println("Error while finding order");
@@ -134,7 +139,7 @@ public class OrderDaoJDBC implements OrderDao {
             ResultSet resultSet = statementFirst.executeQuery();
             List<Order> orders = new ArrayList<>();
             while (resultSet.next()) {
-                Order newOrder = createOrderFromResultSet(resultSet, statementFirst, conn, resultSet.getInt("id"));
+                Order newOrder = createOrderFromResultSet(resultSet, conn, resultSet.getInt("id"));
                 orders.add(newOrder);
             }
             return orders;
@@ -144,7 +149,7 @@ public class OrderDaoJDBC implements OrderDao {
         return null;
     }
 
-    private Order createOrderFromResultSet(ResultSet resultSet, PreparedStatement statementFirst, Connection conn, int id) throws SQLException {
+    private Order createOrderFromResultSet(ResultSet resultSet, Connection conn, int id) throws SQLException {
         String cart = resultSet.getString("cart_data");
         int cartId = resultSet.getInt("cart_id");
         boolean valid = resultSet.getBoolean("valid");
@@ -158,10 +163,10 @@ public class OrderDaoJDBC implements OrderDao {
                     "FROM valid_order " +
                     "WHERE id = ?";
             PreparedStatement statementSecond = conn.prepareStatement(sqlSecond);
-            statementFirst.setInt(1, resultSet.getInt("valid_id"));
+            statementSecond.setInt(1, resultSet.getInt("valid_id"));
             resultSet = statementSecond.executeQuery();
             if (resultSet.next()) {
-                Order order = new ValidOrder(resultSet.getString("firstname"),
+                Order order = new ValidOrder(resultSet.getString("first_name"),
                         resultSet.getString("last_name"),
                         resultSet.getString("country"),
                         resultSet.getString("city"),
@@ -177,7 +182,7 @@ public class OrderDaoJDBC implements OrderDao {
                     "FROM invalid_order " +
                     "WHERE id = ?";
             PreparedStatement statementSecond = conn.prepareStatement(sqlSecond);
-            statementFirst.setInt(1, resultSet.getInt("invalid_id"));
+            statementSecond.setInt(1, resultSet.getInt("invalid_id"));
             resultSet = statementSecond.executeQuery();
             if (resultSet.next()) {
                 Order order = new InvalidOrder(resultSet.getString("message"), cartId, cart);
