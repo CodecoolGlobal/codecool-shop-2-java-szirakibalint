@@ -19,16 +19,20 @@ import java.math.BigDecimal;
 @WebListener
 public class Initializer implements ServletContextListener {
 
+    private static final String ENVIRONMENTAL_VARIABLE_FOR_CONFIG = "config";
+    private static final String DATABASE_KEYWORD = "jdbc";
+    private static final String MEMORY_KEYWORD = "memory";
+
     @Override
     public void contextInitialized(ServletContextEvent sce) {
-        if (System.getenv("config").equals("jdbc")) {
+        if (System.getenv(ENVIRONMENTAL_VARIABLE_FOR_CONFIG).equals(DATABASE_KEYWORD)) {
             DataBaseManager dataBaseManager = DataBaseManager.getInstance();
             ProductDaoJDBC.getInstance(dataBaseManager.getConnectionData());
             ProductCategoryDaoJDBC.getInstance(dataBaseManager.getConnectionData());
             SupplierDaoJDBC.getInstance(dataBaseManager.getConnectionData());
             CartDaoJDBC.getInstance(dataBaseManager.getConnectionData());
             OrderDaoJDBC.getInstance(dataBaseManager.getConnectionData());
-        } else if (System.getenv("config").equals("memory")) {
+        } else if (System.getenv(ENVIRONMENTAL_VARIABLE_FOR_CONFIG).equals(MEMORY_KEYWORD)) {
             ProductDao productDataStore = ProductDaoMem.getInstance();
             ProductCategoryDao productCategoryDataStore = ProductCategoryDaoMem.getInstance();
             SupplierDao supplierDataStore = SupplierDaoMem.getInstance();

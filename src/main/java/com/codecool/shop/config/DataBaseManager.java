@@ -15,6 +15,10 @@ public class DataBaseManager {
 
     private static DataBaseManager instance;
 
+    private static final String ENVIRONMENTAL_VARIABLE_FOR_CONFIG = "config";
+    private static final String DATABASE_KEYWORD = "jdbc";
+    private static final String MEMORY_KEYWORD = "memory";
+
     private DataBaseManager() {
     }
 
@@ -39,10 +43,10 @@ public class DataBaseManager {
     }
 
     public ProductDao getCurrentProductDao() {
-        String config = System.getenv("config");
-        if (config.equals("jdbc")) {
+        String config = System.getenv(ENVIRONMENTAL_VARIABLE_FOR_CONFIG);
+        if (config.equals(DATABASE_KEYWORD)) {
             return ProductDaoJDBC.getInstance();
-        } else if (config.equals("memory")) {
+        } else if (config.equals(MEMORY_KEYWORD)) {
             return ProductDaoMem.getInstance();
         } else {
             throw new RuntimeException("Invalid config setting");
@@ -50,10 +54,10 @@ public class DataBaseManager {
     }
 
     public ProductCategoryDao getCurrentProductCategoryDao() {
-        String config = System.getenv("config");
-        if (config.equals("jdbc")) {
+        String config = System.getenv(ENVIRONMENTAL_VARIABLE_FOR_CONFIG);
+        if (config.equals(DATABASE_KEYWORD)) {
             return ProductCategoryDaoJDBC.getInstance();
-        } else if (config.equals("memory")) {
+        } else if (config.equals(MEMORY_KEYWORD)) {
             return ProductCategoryDaoMem.getInstance();
         } else {
             throw new RuntimeException("Invalid config setting");
@@ -61,10 +65,10 @@ public class DataBaseManager {
     }
 
     public SupplierDao getCurrentSupplierDao() {
-        String config = System.getenv("config");
-        if (config.equals("jdbc")) {
+        String config = System.getenv(ENVIRONMENTAL_VARIABLE_FOR_CONFIG);
+        if (config.equals(DATABASE_KEYWORD)) {
             return SupplierDaoJDBC.getInstance();
-        } else if (config.equals("memory")) {
+        } else if (config.equals(MEMORY_KEYWORD)) {
             return SupplierDaoMem.getInstance();
         } else {
             throw new RuntimeException("Invalid config setting");
@@ -72,10 +76,10 @@ public class DataBaseManager {
     }
 
     public CartDao getCurrentCartDao() {
-        String config = System.getenv("config");
-        if (config.equals("jdbc")) {
+        String config = System.getenv(ENVIRONMENTAL_VARIABLE_FOR_CONFIG);
+        if (config.equals(DATABASE_KEYWORD)) {
             return CartDaoJDBC.getInstance();
-        } else if (config.equals("memory")) {
+        } else if (config.equals(MEMORY_KEYWORD)) {
             return CartDaoMem.getInstance();
         } else {
             throw new RuntimeException("Invalid config setting");
@@ -83,10 +87,10 @@ public class DataBaseManager {
     }
 
     public OrderDao getCurrentOrderDao() {
-        String config = System.getenv("config");
-        if (config.equals("jdbc")) {
+        String config = System.getenv(ENVIRONMENTAL_VARIABLE_FOR_CONFIG);
+        if (config.equals(DATABASE_KEYWORD)) {
             return OrderDaoJDBC.getInstance();
-        } else if (config.equals("memory")) {
+        } else if (config.equals(MEMORY_KEYWORD)) {
             return OrderDaoMem.getInstance();
         } else {
             throw new RuntimeException("Invalid config setting");
